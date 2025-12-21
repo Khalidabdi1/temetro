@@ -114,24 +114,19 @@ app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
-ipcMain.on('change-window-size', (event, mywidth: number, myheight: number) => {
-  if (win) {
-    win.setSize(mywidth, myheight)
-  }
+ipcMain.on('change-window-size', (_, myWidth: number, myHeight: number) => {
+  if (!win) return
 
-   if (!win) return
-
-  // الحصول على حجم الشاشة
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
 
-  // تعيين حجم النافذة ومركزها
   win.setBounds({
-    x: Math.floor((width - mywidth) / 2),
-    y: Math.floor((height - myheight) / 2),
-    width: mywidth,
-    height: myheight
+    x: Math.floor((width - myWidth) / 2),
+    y: Math.floor((height - myHeight) / 2),
+    width: myWidth,
+    height: myHeight
   })
 })
+
 
 app.whenReady().then(() => {
   createWindow()

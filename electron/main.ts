@@ -1,28 +1,25 @@
-import { app, BrowserWindow } from 'electron'
-// import { createRequire } from 'node:module'
+import { app, BrowserWindow, dialog ,ipcMain,screen} from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+import { autoUpdater } from 'electron-updater'
+import log from 'electron-log'
 
-// const require = createRequire(import.meta.url)
+
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// The built directory structure
-//
-// ├─┬─┬ dist
-// │ │ └── index.html
-// │ │
-// │ ├─┬ dist-electron
-// │ │ ├── main.js
-// │ │ └── preload.mjs
-// │
-process.env.APP_ROOT = path.join(__dirname, '..')
+// ------------- Logger for autoUpdater -------------
+log.transports.file.level = 'info'
+autoUpdater.logger = log
 
-// 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
+// ------------- App paths -------------
+process.env.APP_ROOT = path.join(__dirname, '..')
 export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
 export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
-
-process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 'public') : RENDERER_DIST
+process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
+  ? path.join(process.env.APP_ROOT, 'public')
+  : RENDERER_DIST
 
 let win: BrowserWindow | null
 
@@ -31,25 +28,81 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
+       contextIsolation: true,
+    nodeIntegration: false,
     },
+    width:600,
+    height:600,
+    center:true
   })
 
-  // Test active push message to Renderer-process.
+  // Send a message to renderer on load
   win.webContents.on('did-finish-load', () => {
-    win?.webContents.send('main-process-message', (new Date).toLocaleString())
+    win?.webContents.send('main-process-message', new Date().toLocaleString())
   })
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
-    // win.loadFile('dist/index.html')
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
 }
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
+
+
+// ----------------- AutoUpdater -----------------
+function initAutoUpdater() {
+  autoUpdater.checkForUpdatesAndNotify()
+
+  autoUpdater.on('checking-for-update', () => {
+    log.info('Checking for update...')
+  })
+
+  autoUpdater.on('update-available', (info) => {
+    log.info('Update available.', info)
+    dialog.showMessageBox({
+      type: 'info',
+      title: 'Update available',
+      message: `A new version ${info.version} is available. Downloading now...`,
+    })
+  })
+
+  autoUpdater.on('update-not-available', () => {
+    log.info('No updates available.')
+  })
+
+  autoUpdater.on('error', (err) => {
+    log.error('Error in auto-updater:', err)
+  })
+
+autoUpdater.on('download-progress', (progressObj) => {
+  const log_message = `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${Math.floor(progressObj.percent)}% (${progressObj.transferred}/${progressObj.total})`
+  log.info(log_message)
+})
+
+autoUpdater.on('update-available', (info) => {
+  log.info('Update available.', info)
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update available',
+    message: `A new version ${info.version} is available. Downloading now...`,
+  })
+})
+
+autoUpdater.on('update-downloaded', () => {
+  log.info('Update downloaded; will install now')
+  dialog.showMessageBox({
+    type: 'info',
+    title: 'Update ready',
+    message: 'Update downloaded. The app will quit and install the update now.',
+  }).then(() => {
+    setImmediate(() => autoUpdater.quitAndInstall())
+  })
+})
+
+}
+
+// ----------------- App lifecycle -----------------
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
@@ -58,11 +111,29 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
-  }
+  if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
-app.whenReady().then(createWindow)
+ipcMain.on('change-window-size', (event, mywidth: number, myheight: number) => {
+  if (win) {
+    win.setSize(mywidth, myheight)
+  }
+
+   if (!win) return
+
+  // الحصول على حجم الشاشة
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
+
+  // تعيين حجم النافذة ومركزها
+  win.setBounds({
+    x: Math.floor((width - mywidth) / 2),
+    y: Math.floor((height - myheight) / 2),
+    width: mywidth,
+    height: myheight
+  })
+})
+
+app.whenReady().then(() => {
+  createWindow()
+  initAutoUpdater()
+})

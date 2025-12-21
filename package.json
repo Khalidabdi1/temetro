@@ -1,10 +1,13 @@
 {
   "name": "temetro",
   "private": true,
-  "version": "0.1.12",
+  "version": "0.1.13",
   "type": "module",
   "description": "Temetro App",
-  "author": "khalid abdi",
+  "author":{
+    "name": "khalid abdi",
+    "email": "khalidstudentxv@gmail.com"
+  } ,
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",

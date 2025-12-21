@@ -35,7 +35,7 @@
     "deleteAppDataOnUninstall": false
   },
   "linux": {
-    "target": ["AppImage", "deb", "rpm","snap"],
+    "target": ["AppImage", "deb", "rpm"],
       "category": "Utility",
 
     "artifactName": "${productName}-Linux-${version}.${ext}"

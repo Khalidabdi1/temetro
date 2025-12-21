@@ -25,11 +25,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Clean electron-builder cache (Linux only)
+        if: matrix.os == 'ubuntu-latest'
+        run: rm -rf ~/.cache/electron-builder
+
+      - name: Make app-builder executable (Linux only)
+        if: matrix.os == 'ubuntu-latest'
+        run: chmod +x node_modules/app-builder-bin/linux/x64/app-builder
+
       - name: Build Electron
         run: npm run build
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
 
       - name: List release folder
         run: ls -lh release

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog ,ipcMain,screen} from 'electron'
+import { app, BrowserWindow, dialog ,ipcMain,screen,Menu} from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { autoUpdater } from 'electron-updater'
@@ -33,8 +33,16 @@ function createWindow() {
     },
     width:600,
     height:600,
-    center:true
+    center:true,
+   
+    hasShadow:false,
+    transparent:true,
+    backgroundColor: '#00000000',
+    frame: false, 
+  resizable: true,
+    
   })
+  Menu.setApplicationMenu(null)
 
   // Send a message to renderer on load
   win.webContents.on('did-finish-load', () => {

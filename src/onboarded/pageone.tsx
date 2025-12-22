@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import AppBorder from "@/screen/border"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
+
 export default function Pageone() {
     useEffect(() => {
         window.electronAPI.changeWindowSize(723, 500)

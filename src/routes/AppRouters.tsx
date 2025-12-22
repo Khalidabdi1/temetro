@@ -4,6 +4,7 @@ import Home from "@/home/home";
 import Pageone from "@/onboarded/pageone";
 import Pagetwo from "@/onboarded/pagetwo";
 import Pagethree from "@/onboarded/pagetheree";
+import Auth from "@/auth/auth";
 
 export default function AppRouters() {
 
@@ -16,6 +17,7 @@ export default function AppRouters() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="home" element={<Home />} />
+          <Route path="auth" element={<Auth/>}/>
         </Route>
 
         {/* مسارات الـ Onboarding يجب أن تكون خارج تحكم الـ Layout الذي يعيد التوجيه */}

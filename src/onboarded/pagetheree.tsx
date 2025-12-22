@@ -10,7 +10,7 @@ export default function Pagethree() {
 
     function handleClick() {
         localStorage.setItem("hasOnboarded", "true")
-        navigate("/home")
+        navigate("/auth")
     }
 
 

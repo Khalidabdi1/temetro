@@ -39,7 +39,7 @@ jobs:
       - name: Build and Publish Electron App
         run: npx electron-builder --linux AppImage deb rpm pacman --publish always
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: List release folder
         run: ls -lh dist

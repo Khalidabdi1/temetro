@@ -1,4 +1,4 @@
-name: Build & Release Electron App
+name: Build & Release Electron App (Linux All Formats)
 
 on:
   push:
@@ -7,10 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -25,18 +22,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Clean electron-builder cache (Linux only)
-        if: matrix.os == 'ubuntu-latest'
+      - name: Install build tools for RPM and Arch
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm zstd
+
+      - name: Clean electron-builder cache
         run: rm -rf ~/.cache/electron-builder
 
-      - name: Make app-builder executable (Linux only)
-        if: matrix.os == 'ubuntu-latest'
-        run: chmod +x node_modules/app-builder-bin/linux/x64/app-builder
-
-      - name: Build Electron
-        run: npm run build
+      - name: Build and Publish Electron App
+        run: npx electron-builder --linux AppImage deb rpm tar.zst --publish always
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: List release folder
-        run: ls -lh release
+        run: ls -lh dist

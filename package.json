@@ -1,7 +1,7 @@
 {
   "name": "temetro",
   "private": true,
-  "version": "0.1.16",
+  "version": "0.1.17",
   "type": "module",
   "description": "Temetro App",
   "author": {
@@ -50,18 +50,24 @@
   },
   "main": "dist-electron/main.js",
 
- "build": {
+"build": {
   "appId": "com.temetro.app",
   "productName": "Temetro",
+  "linux": {
+    "target": [
+      "AppImage",
+      "deb",
+      "rpm",
+      "tar.zst"
+    ],
+    "category": "Utility"
+  },
   "publish": [
     {
       "provider": "github",
       "owner": "Khalidabdi1",
       "repo": "temetro"
     }
-  ],
-  "win": {
-    "target": "nsis"
-  }
+  ]
 }
 }

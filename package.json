@@ -1,7 +1,7 @@
 {
   "name": "temetro",
   "private": true,
-  "version": "0.1.15",
+  "version": "0.1.16",
   "type": "module",
   "description": "Temetro App",
   "author": {
@@ -49,11 +49,19 @@
     "vite-plugin-electron-renderer": "^0.14.5"
   },
   "main": "dist-electron/main.js",
+
+ "build": {
+  "appId": "com.temetro.app",
+  "productName": "Temetro",
   "publish": [
     {
       "provider": "github",
       "owner": "Khalidabdi1",
       "repo": "temetro"
     }
-  ]
+  ],
+  "win": {
+    "target": "nsis"
+  }
+}
 }

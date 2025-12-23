@@ -10,7 +10,7 @@ export default function Home() {
     }, [])
     return (
         <AppBorder>
-            <h1>Home page</h1>
+            <h1>Home page update check 1</h1>
         </AppBorder>
 
 

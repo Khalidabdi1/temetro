@@ -3,7 +3,10 @@ name: Build & Release Electron App (Linux All Formats)
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*.*' 
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -25,7 +28,7 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y rpm libarchive-tools
+          sudo apt-get install -y rpm libarchive-tools zstd
 
       - name: Build Source Code
         run: npm run build

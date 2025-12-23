@@ -27,6 +27,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rpm libarchive-tools
 
+      - name: Build Source Code
+        run: npm run build
+
       - name: Clean electron-builder cache
         run: rm -rf ~/.cache/electron-builder
 

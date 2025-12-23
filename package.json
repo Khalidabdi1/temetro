@@ -1,7 +1,7 @@
 {
   "name": "temetro",
   "private": true,
-  "version": "0.1.18",
+  "version": "0.1.19",
   "type": "module",
   "description": "Temetro App",
   "author": {
@@ -48,18 +48,18 @@
     "vite-plugin-electron": "^0.28.6",
     "vite-plugin-electron-renderer": "^0.14.5"
   },
-  "main": "dist-electron/main.js",
-
+ "main": "dist-electron/main.js",
 "build": {
   "appId": "com.temetro.app",
   "productName": "Temetro",
+  "files": [
+    "dist",
+    "dist-electron",
+    "public",
+    "package.json"
+  ],
   "linux": {
-    "target": [
-      "AppImage",
-      "deb",
-      "rpm",
-      "pacman"
-    ],
+    "target": ["AppImage", "deb", "rpm", "pacman"],
     "category": "Utility"
   },
   "publish": [

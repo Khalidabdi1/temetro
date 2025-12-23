@@ -1,7 +1,7 @@
 {
   "name": "temetro",
   "private": true,
-  "version": "0.1.17",
+  "version": "0.1.18",
   "type": "module",
   "description": "Temetro App",
   "author": {
@@ -58,7 +58,7 @@
       "AppImage",
       "deb",
       "rpm",
-      "tar.zst"
+      "pacman"
     ],
     "category": "Utility"
   },

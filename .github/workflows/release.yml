@@ -22,16 +22,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install build tools for RPM and Arch
+      - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y rpm zstd
+          sudo apt-get install -y rpm libarchive-tools
 
       - name: Clean electron-builder cache
         run: rm -rf ~/.cache/electron-builder
 
       - name: Build and Publish Electron App
-        run: npx electron-builder --linux AppImage deb rpm tar.zst --publish always
+        run: npx electron-builder --linux AppImage deb rpm pacman --publish always
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 

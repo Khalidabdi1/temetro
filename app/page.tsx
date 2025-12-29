@@ -1,9 +1,6 @@
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import LandingLayout from "./components/landing/LandingLayout";
 
 export default function Home() {
-  return (
-   <div>
-    start
-   </div>
-  );
+  return <LandingLayout/>
 }

@@ -44,11 +44,11 @@ const Header = () => {
                 </nav>
                 <div className='flex justify-center items-center space-x-4'>
                     <Link href={"https://github.com/Khalidabdi1/temetro"}><Github size={35} /></Link>
-
+{/* 
                     <Link href={"/"}>
                                         <Button className='cursor-pointer'>Join Waitlist</Button>
 
-                    </Link>
+                    </Link> */}
                 </div>
 
             </header>

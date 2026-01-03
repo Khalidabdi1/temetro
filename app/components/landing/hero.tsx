@@ -12,6 +12,7 @@ const Hero = () => {
     const [Email, SetEmail] = useState<string>("");
     const [alert, setAlert] = useState<boolean>(false)
     console.log(process.env.NEXT_PUBLIC_BACKEND)
+    
     function sandData() {
         axios.post(process.env.NEXT_PUBLIC_BACKEND + "waitlist", {
             email: Email

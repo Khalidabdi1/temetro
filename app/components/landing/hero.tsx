@@ -56,13 +56,8 @@ const Hero = () => {
                 </div>
 
                 <div className='flex justify-center items-center mt-5 space-x-3'>
-                    <Input value={Email} placeholder='Email' className='w-70' onChange={(e) => {
-                        SetEmail(e.target.value)
-                    }} />
-
-                    <Button onClick={() => {
-sandData()
-                    }}>Join Waitlist</Button>
+                   <Button variant={"outline"} className='w-30 p-2'>Start</Button>
+<Button  className='w-30 p-2'>sign in </Button>
                 </div>
             </div>
 

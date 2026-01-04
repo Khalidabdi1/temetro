@@ -6,27 +6,14 @@ import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import axios from 'axios'
+import Link from 'next/link'
 
 
 const Hero = () => {
-    const [Email, SetEmail] = useState<string>("");
     const [alert, setAlert] = useState<boolean>(false)
-    console.log(process.env.NEXT_PUBLIC_BACKEND)
-    
-    function sandData() {
-        axios.post(process.env.NEXT_PUBLIC_BACKEND + "waitlist", {
-            email: Email
-        }).then((data)=>{
-            console.log(data)
-        })
 
-        setAlert(true)
-        SetEmail("")
-        setTimeout(() => {
-            setAlert(false)
-        }, 3000)
 
-    }
+
 
     return (
         <div className='flex justify-center items-center '>
@@ -56,8 +43,15 @@ const Hero = () => {
                 </div>
 
                 <div className='flex justify-center items-center mt-5 space-x-3'>
-                   <Button variant={"outline"} className='w-30 p-2'>Start</Button>
-<Button  className='w-30 p-2'>sign in </Button>
+                    <Link href={"/auth/signup"}>
+                                        <Button variant={"outline"} className='w-30 p-2'>Start</Button>
+
+                    </Link>
+
+                    <Link href={"/auth/login"}>
+                        <Button className='w-30 p-2'>Login </Button>
+                    </Link>
+
                 </div>
             </div>
 

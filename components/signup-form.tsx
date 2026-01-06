@@ -14,35 +14,117 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldSeparator
+  FieldSeparator,
+  FieldError
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import Image from "next/image"
 import { authClient } from "@/lib/auth-client"
 import { useState } from "react"
+import { z } from "zod"
+
+import { SignupSchema } from "@/lib/zod"
+import { useRouter } from "next/navigation"; // Next 13+ App Router
+
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
 
-  let [loading, SetLoading] = useState(false);
+//to do add animiation unitl sand to backend form shadcn Spinner
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
 
+    const router = useRouter();
 
-  function test(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    console.log("com")
+  //zod issue
+  type FieldErrors = Record<string, string[]>;
+
+  function zodIssue(issues: z.core.$ZodIssueBase[]): FieldErrors {
+
+    const errors: FieldErrors = {};
+
+    for (const issue of issues) {
+      const key = issue.path[0];
+      if (typeof key !== "string") continue;
+
+      if (!errors[key]) errors[key] = [];
+      errors[key].push(issue.message);
+    }
+
+    return errors;
+
   }
+
+  //vaild the data
+  async function test(event: React.FormEvent<HTMLFormElement>) {
+    
+    event.preventDefault()
+    console.log("start valid")
+
+    const formData = new FormData(event.currentTarget)
+
+    const data = {
+      Name: formData.get("Name"),
+      Email: formData.get("Email"),
+      Password: formData.get("Password"),
+      confirmPassword: formData.get("Confirm-password")
+
+    }
+
+    const result = SignupSchema.safeParse(data)
+
+
+    if (!result.success) {
+      console.log(result.error)
+      const filedError = zodIssue(result.error.issues)
+      setErrors(filedError)
+      console.log(data)
+      return
+    }
+
+    setErrors({})
+
+    console.log("Valid data", result.data)
+
+
+    try {
+      const res = await authClient.signUp.email({
+        name: result.data.Name as string,
+        email: result.data.Email as string,
+        password: result.data.Password as string,
+        // the link should change later to real one
+        callbackURL: process.env.NEXT_PUBLIC_FRONTEND+"/dashboard"
+      })
+
+      // if is sign up before 
+      if (res.error){
+        setErrors({registered: ["Email is already registered or invalid"]})
+        return
+      }
+      // if successful
+      console.log("sign up success:", res)
+
+      router.push("/dashboard")
+
+    } catch (error) {
+      console.log(" better auth sign up error error is ", error)
+      // if the email is sign up before
+      setErrors({ registered: ["Email is already registered or invalid"] })
+    }
+  }
+
+  //need fix google
   async function handleLogin() {
-    SetLoading(true)
+    // SetLoading(true)
     try {
       await authClient.signIn.social({
         provider: "google",
         callbackURL: "http://localhost:3000/dashboard"
       })
     } catch (error) {
-      console.error("error with auth is ",error)
+      console.error("error with auth is ", error)
 
     }
 
@@ -85,30 +167,37 @@ export function SignupForm({
               <Field>
 
                 <FieldLabel htmlFor="name">Full Name</FieldLabel>
-                <Input id="name" type="text" placeholder="John Doe" required />
+                <Input id="name" name="Name" type="text" placeholder="John Doe" required />
               </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
+                  name="Email"
                   type="email"
                   placeholder="m@example.com"
                   required
                 />
+                {errors.Email && <FieldError>{errors.Email[0]}</FieldError>}
+                {errors.registered && <FieldError>{errors.registered[0]}</FieldError>}
+
               </Field>
+              {/* <FieldError errors={e}>d</FieldError> */}
               <Field>
                 <Field className="grid grid-cols-2 gap-4">
                   <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" type="password" required />
+                    <Input id="password" name="Password" type="password" required />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="confirm-password">
                       Confirm Password
                     </FieldLabel>
-                    <Input id="confirm-password" type="password" required />
+                    <Input id="confirm-password" name="Confirm-password" type="password" required />
                   </Field>
                 </Field>
+                {errors.confirmPassword && <FieldError>{errors.confirmPassword[0]}</FieldError>}
+
                 <FieldDescription>
                   Must be at least 8 characters long.
                 </FieldDescription>

@@ -95,11 +95,13 @@ export function SignupForm({
         email: result.data.Email as string,
         password: result.data.Password as string,
         // the link should change later to real one
-        // callbackURL: process.env.NEXT_PUBLIC_FRONTEND+"/dashboard"
+        callbackURL:"/dashboard"
       })
 
       // if is sign up before 
+      
       if (res.error){
+        console.log("error is ",res.error)
         setErrors({registered: ["Email is already registered or invalid"]})
         return
       }

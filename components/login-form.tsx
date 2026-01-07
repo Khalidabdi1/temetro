@@ -1,5 +1,13 @@
+"use client"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import {
+  Item,
+  ItemContent,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item"
+import { Spinner } from "@/components/ui/spinner"
 import {
   Card,
   CardContent,
@@ -13,19 +21,105 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
+  FieldError
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import Link from "next/link"
+import { authClient } from "@/lib/auth-client"
+import { LoginSchema } from "@/lib/zod"
+import { useState } from "react"
+import * as z from "zod"
+import { useRouter } from "next/navigation"; 
+
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [errors, setErrors] = useState<Record<string, string[]>>({});
+  const[loading,setLoading]=useState<boolean>(false)
+  const[info,setInfo]=useState<{email:string,password:string}>({
+    email:"",
+    password:""
+  })
+const router = useRouter();
+
+
+  //zod issue
+  type FieldErrors = Record<string, string[]>;
+
+  function zodIssue(issues: z.core.$ZodIssueBase[]): FieldErrors {
+
+    const errors: FieldErrors = {};
+
+    for (const issue of issues) {
+      const key = issue.path[0];
+      if (typeof key !== "string") continue;
+
+      if (!errors[key]) errors[key] = [];
+      errors[key].push(issue.message);
+    }
+
+    return errors;
+
+  }
+
+  async function Valid(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    console.log("valid start")
+
+    const formData = new FormData(event.currentTarget)
+
+    const data = {
+      Email: formData.get("Email"),
+      Password: formData.get("Password")
+    }
+
+    const result = LoginSchema.safeParse(data)
+
+    if (!result.success) {
+      console.log(result.error.issues[0].message)
+      setErrors({massage:[result.error.issues[0].message]})
+      console.log(errors)
+      const FaildError = zodIssue(result.error.issues)
+
+      setErrors(FaildError)
+      console.log(data)
+      return
+    }
+
+    setErrors({})
+
+try{
+  setLoading(true)
+  const res =await authClient.signIn.email({
+    email:result.data.Email,
+    password:result.data.Password
+  })
+
+  if(res.error){
+    setErrors({massage:["Incorrect password or email"]})
+    setLoading(false)
+    return
+  }
+console.log("login successful ",res.data)
+console.log("valid data",result.data)
+router.push("/dashboard")
+setLoading(false)
+
+}catch(error){
+  console.error(error)
+}
+
+
+  }
   return (
+
+
     <div className={cn("flex flex-col justify-center items-center gap-3 p-2", className)} {...props}>
-        <Image src={"/logo2.png"} width={65} height={65} alt='temetro' className='m-0  ' />
-      
+      <Image src={"/logo2.png"} width={65} height={65} alt='temetro' className='m-0  ' />
+
       <Card className="w-full md:w-[30%]">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
@@ -34,7 +128,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={Valid}>
             <FieldGroup>
               <Field>
                 <Button variant="outline" type="button">
@@ -64,6 +158,7 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
+                  name="Email"
                   placeholder="m@example.com"
                   required
                 />
@@ -78,14 +173,16 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" name="Password" required />
+                {errors.Password && <FieldError>{errors.Password[0]}</FieldError>}
+                {errors.massage && <FieldError>{errors.massage[0]}</FieldError>}
               </Field>
               <Field>
                 <Button type="submit">Login</Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?
                   <Link href={"/auth/signup"}>
-                  Sign up
+                    Sign up
                   </Link>
                 </FieldDescription>
               </Field>
@@ -97,6 +194,24 @@ export function LoginForm({
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
       </FieldDescription>
+
+{loading===true &&
+   <div className="flex w-full max-w-xs flex-col gap-4 [--radius:1rem] absolute right-0 bottom-0 m-3">
+      <Item variant="muted">
+        <ItemMedia>
+          <Spinner />
+        </ItemMedia>
+        <ItemContent>
+          <ItemTitle className="line-clamp-1">Processing ...</ItemTitle>
+        </ItemContent>
+        {/* <ItemContent className="flex-none justify-end">
+          <span className="text-sm tabular-nums">$100.00</span>
+        </ItemContent> */}
+      </Item>
+    </div>
+
+}
+       
     </div>
   )
 }

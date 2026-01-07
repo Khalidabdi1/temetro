@@ -25,7 +25,7 @@ import { useState } from "react"
 import { z } from "zod"
 
 import { SignupSchema } from "@/lib/zod"
-import { useRouter } from "next/navigation"; // Next 13+ App Router
+import { useRouter } from "next/navigation"; 
 
 
 export function SignupForm({
@@ -95,7 +95,7 @@ export function SignupForm({
         email: result.data.Email as string,
         password: result.data.Password as string,
         // the link should change later to real one
-        callbackURL: process.env.NEXT_PUBLIC_FRONTEND+"/dashboard"
+        // callbackURL: process.env.NEXT_PUBLIC_FRONTEND+"/dashboard"
       })
 
       // if is sign up before 
@@ -122,6 +122,7 @@ export function SignupForm({
       await authClient.signIn.social({
         provider: "google",
         callbackURL: "http://localhost:3000/dashboard"
+      
       })
     } catch (error) {
       console.error("error with auth is ", error)

@@ -123,7 +123,7 @@ export function SignupForm({
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/dashboard"
+        callbackURL: process.env.NEXT_PUBLIC_FRONTEND+"dashboard"
       
       })
     } catch (error) {

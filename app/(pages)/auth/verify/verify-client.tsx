@@ -11,5 +11,11 @@ export function VerifyClient() {
     return <div className="text-center p-10">Invalid verification link</div>
   }
 
-  return <OTPForm email={email} />
+  return(
+     <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <OTPForm email={email}/>
+      </div>
+    </div>
+  )
 }

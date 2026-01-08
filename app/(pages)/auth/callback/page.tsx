@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -24,11 +24,19 @@ export default function AuthCallbackPage() {
 
     sessionStorage.setItem("oauth_used", "true")
     router.replace("/dashboard")
-  }, [])
+  }, [router, searchParams])
 
   return (
     <div className="flex h-screen items-center justify-center">
       <p>Processing authentication...</p>
     </div>
+  )
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+      <AuthCallbackContent />
+    </Suspense>
   )
 }

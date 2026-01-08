@@ -19,7 +19,6 @@ import { useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
-import { Suspense } from "react"
 export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
   const router =useRouter()
   const[otp,SetOtp]=useState<string>("")
@@ -49,7 +48,7 @@ console.log("sign up successfuly :",data)
 
 
   return (
-    <Suspense>
+    
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <form className="flex justify-center items-center " onSubmit={check}>
         <FieldGroup>
@@ -137,6 +136,6 @@ console.log("sign up successfuly :",data)
         and <a href="#">Privacy Policy</a>.
       </FieldDescription>
     </div>
-    </Suspense>
+   
   )
 }

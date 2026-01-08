@@ -1,4 +1,6 @@
 import { createAuthClient } from "better-auth/client";
+import { emailOTPClient } from "better-auth/client/plugins"
+
 
 export const authClient =createAuthClient({
     baseURL:process.env.NEXT_PUBLIC_BACKEND,
@@ -9,5 +11,9 @@ export const authClient =createAuthClient({
    session:{
   activeTab: true,
     crossTab:true
-   }
+   },
+   plugins:[
+    emailOTPClient(),
+   
+   ]
 })

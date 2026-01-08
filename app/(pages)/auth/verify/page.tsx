@@ -1,10 +1,9 @@
 import React from 'react'
+import OTPPage from '@/app/(pages)/otp/page'
 
 const Page = () => {
   return (
-    <div>
-      auth
-    </div>
+   <OTPPage/>
   )
 }
 

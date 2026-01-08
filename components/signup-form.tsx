@@ -57,6 +57,7 @@ export function SignupForm({
 
   }
 
+  
   //vaild the data
   async function test(event: React.FormEvent<HTMLFormElement>) {
     
@@ -80,6 +81,7 @@ export function SignupForm({
       console.log(result.error)
       const filedError = zodIssue(result.error.issues)
       setErrors(filedError)
+      console.log("the array of err is ",filedError)
       console.log(data)
       return
     }
@@ -108,7 +110,14 @@ export function SignupForm({
       // if successful
       console.log("sign up success:", res)
 
-      router.push("/dashboard")
+      //verify email user 
+      await authClient.emailOtp.sendVerificationOtp({
+        email:result.data.Email,
+        type:"email-verification"
+      })
+
+
+      router.push(`/auth/verify?email=${result.data.Email}`)
 
     } catch (error) {
       console.log(" better auth sign up error error is ", error)
@@ -120,13 +129,20 @@ export function SignupForm({
   //need fix google
   async function handleLogin() {
     // SetLoading(true)
+      sessionStorage.removeItem("oauth_started")
+
     try {
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: process.env.NEXT_PUBLIC_FRONTEND+"dashboard"
+        //work one
+        // callbackURL: process.env.NEXT_PUBLIC_FRONTEND+"dashboard"
+        //test one
+         callbackURL: `${process.env.NEXT_PUBLIC_FRONTEND}/auth/callback`
+
       
       })
     } catch (error) {
+      router.push("/error")
       console.error("error with auth is ", error)
 
     }
@@ -191,6 +207,7 @@ export function SignupForm({
                   <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
                     <Input id="password" name="Password" type="password" required />
+                       {errors.confirmPasswords && <FieldError>{errors.confirmPasswords[0]}</FieldError>}
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="confirm-password">

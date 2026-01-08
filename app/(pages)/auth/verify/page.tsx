@@ -1,5 +1,4 @@
 import React from 'react'
-import OTPPage from '@/app/(pages)/otp/page'
 import { Suspense } from 'react'
 import { VerifyClient } from './verify-client'
 

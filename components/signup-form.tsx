@@ -1,6 +1,14 @@
 "use client"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import {
+  Item,
+  ItemContent,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item"
+import { Spinner } from "@/components/ui/spinner"
+
 
 import {
   Card,
@@ -35,6 +43,8 @@ export function SignupForm({
 
 //to do add animiation unitl sand to backend form shadcn Spinner
   const [errors, setErrors] = useState<Record<string, string[]>>({});
+    const[loading,setLoading]=useState<boolean>(false)
+
 
     const router = useRouter();
 
@@ -60,6 +70,7 @@ export function SignupForm({
   
   //vaild the data
   async function test(event: React.FormEvent<HTMLFormElement>) {
+    setLoading(true)
     
     event.preventDefault()
     console.log("start valid")
@@ -83,6 +94,7 @@ export function SignupForm({
       setErrors(filedError)
       console.log("the array of err is ",filedError)
       console.log(data)
+      setLoading(false)
       return
     }
 
@@ -107,6 +119,7 @@ export function SignupForm({
         setErrors({registered: ["Email is already registered or invalid"]})
         return
       }
+      setLoading(false)
       // if successful
       console.log("sign up success:", res)
 
@@ -128,7 +141,7 @@ export function SignupForm({
 
   //need fix google
   async function handleLogin() {
-    // SetLoading(true)
+    setLoading(true)
       sessionStorage.removeItem("oauth_started")
 
     try {
@@ -141,6 +154,7 @@ export function SignupForm({
 
       
       })
+      setLoading(false)
     } catch (error) {
       router.push("/error")
       console.error("error with auth is ", error)
@@ -241,6 +255,24 @@ export function SignupForm({
         and
         <a href="#"> Privacy Policy</a>.
       </FieldDescription>
+
+      {/* for alert */}
+{loading===true &&
+   <div className="flex w-full max-w-xs flex-col gap-4 [--radius:1rem] absolute right-0 bottom-0 m-3">
+      <Item variant="muted">
+        <ItemMedia>
+          <Spinner />
+        </ItemMedia>
+        <ItemContent>
+          <ItemTitle className="line-clamp-1">Processing ...</ItemTitle>
+        </ItemContent>
+        {/* <ItemContent className="flex-none justify-end">
+          <span className="text-sm tabular-nums">$100.00</span>
+        </ItemContent> */}
+      </Item>
+    </div>
+
+}
     </div>
   )
 }

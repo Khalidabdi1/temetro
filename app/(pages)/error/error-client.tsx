@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 
 export function ErrorClient() {
   const params = useSearchParams()
@@ -15,6 +16,7 @@ export function ErrorClient() {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-4">
+        <Image src={"/errorImages.png"} width={300} height={300} alt="error photo"/>
       <h1 className="text-3xl font-bold">An error occurred</h1>
       <p className="text-muted-foreground">
         {messages[reason ?? ""] ?? "An unexpected error occurred"}

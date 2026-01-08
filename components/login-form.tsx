@@ -39,6 +39,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const[loading,setLoading]=useState<boolean>(false)
+
   const[info,setInfo]=useState<{email:string,password:string}>({
     email:"",
     password:""
@@ -116,6 +117,7 @@ setLoading(false)
   }
 
  async function handleSignin(){
+  setLoading(true)
 
   try{
 await authClient.signIn.social({
@@ -123,7 +125,7 @@ await authClient.signIn.social({
    callbackURL: `${process.env.NEXT_PUBLIC_FRONTEND}auth/callback`
 
 })
-
+setLoading(false)
   }catch (error){
        router.push("/error")
       console.error("error with auth is ", error)
@@ -211,6 +213,7 @@ await authClient.signIn.social({
         and <a href="#">Privacy Policy</a>.
       </FieldDescription>
 
+{/* for alert */}
 {loading===true &&
    <div className="flex w-full max-w-xs flex-col gap-4 [--radius:1rem] absolute right-0 bottom-0 m-3">
       <Item variant="muted">

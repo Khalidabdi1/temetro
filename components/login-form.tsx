@@ -120,7 +120,7 @@ setLoading(false)
   try{
 await authClient.signIn.social({
   provider:"google",
-   callbackURL: `${process.env.NEXT_PUBLIC_FRONTEND}/auth/callback`
+   callbackURL: `${process.env.NEXT_PUBLIC_FRONTEND}auth/callback`
 
 })
 

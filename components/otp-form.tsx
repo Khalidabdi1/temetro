@@ -19,11 +19,18 @@ import { useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
-export function OTPForm({ className, ...props }: React.ComponentProps<"div">) {
+
+
+type OTPFormProps = React.ComponentProps<"div"> & {
+  email: string
+}
+
+export function OTPForm({ email, className, ...props }: OTPFormProps) {
   const router =useRouter()
   const[otp,SetOtp]=useState<string>("")
-  const searchParams=useSearchParams()
-  const Email:string =searchParams.get("email") as string
+  // const searchParams=useSearchParams()
+  // const Email:string =searchParams.get("email") as string
+  const Email=email
 
   async function check(event:React.FormEvent<HTMLFormElement>){
     event.preventDefault()

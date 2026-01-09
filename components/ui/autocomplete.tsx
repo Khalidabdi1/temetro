@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
 import { ChevronsUpDownIcon, XIcon } from "lucide-react";
 
@@ -9,21 +10,25 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Autocomplete = AutocompletePrimitive.Root;
 
+// تعريف الأنواع المسموحة للحجم لمنع تعارض TypeScript
+type AutocompleteSize = "sm" | "default" | "lg";
+
 function AutocompleteInput({
   className,
   showTrigger = false,
   showClear = false,
   startAddon,
-  size,
+  size = "default",
   ...props
 }: Omit<AutocompletePrimitive.Input.Props, "size"> & {
   showTrigger?: boolean;
   showClear?: boolean;
   startAddon?: React.ReactNode;
-  size?: "sm" | "default" | "lg" | number;
+  size?: AutocompleteSize;
   ref?: React.Ref<HTMLInputElement>;
 }) {
-  const sizeValue = (size ?? "default") as "sm" | "default" | "lg" | number;
+  // نستخدم data-attribute بدلاً من تمرير size كـ Prop لمنع خطأ النوع number
+  const uiSize = size;
 
   return (
     <div className="relative not-has-[>*.w-full]:w-fit w-full has-disabled:opacity-64">
@@ -40,20 +45,21 @@ function AutocompleteInput({
         className={cn(
           startAddon &&
             "data-[size=sm]:*:data-[slot=autocomplete-input]:ps-[calc(--spacing(7.5)-1px)] *:data-[slot=autocomplete-input]:ps-[calc(--spacing(8.5)-1px)] sm:data-[size=sm]:*:data-[slot=autocomplete-input]:ps-[calc(--spacing(7)-1px)] sm:*:data-[slot=autocomplete-input]:ps-[calc(--spacing(8)-1px)]",
-          sizeValue === "sm"
+          uiSize === "sm"
             ? "has-[+[data-slot=autocomplete-trigger],+[data-slot=autocomplete-clear]]:*:data-[slot=autocomplete-input]:pe-6.5"
             : "has-[+[data-slot=autocomplete-trigger],+[data-slot=autocomplete-clear]]:*:data-[slot=autocomplete-input]:pe-7",
           className,
         )}
         data-slot="autocomplete-input"
-        render={<Input size={sizeValue} />}
+        // الحل الأساسي: نمرر الحجم عبر data-size لتجنب تضارب الأنواع مع Input الأصلي
+        render={<Input data-size={uiSize} />}
         {...props}
       />
       {showTrigger && (
         <AutocompleteTrigger
           className={cn(
             "-translate-y-1/2 absolute top-1/2 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md border border-transparent opacity-80 outline-none transition-colors pointer-coarse:after:absolute pointer-coarse:after:min-h-11 pointer-coarse:after:min-w-11 hover:opacity-100 has-[+[data-slot=autocomplete-clear]]:hidden sm:size-7 [&_svg:not([class*='size-'])]:size-4.5 sm:[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-            sizeValue === "sm" ? "end-0" : "end-0.5",
+            uiSize === "sm" ? "end-0" : "end-0.5",
           )}
         >
           <ChevronsUpDownIcon />
@@ -63,7 +69,7 @@ function AutocompleteInput({
         <AutocompleteClear
           className={cn(
             "-translate-y-1/2 absolute top-1/2 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md border border-transparent opacity-80 outline-none transition-colors pointer-coarse:after:absolute pointer-coarse:after:min-h-11 pointer-coarse:after:min-w-11 hover:opacity-100 has-[+[data-slot=autocomplete-clear]]:hidden sm:size-7 [&_svg:not([class*='size-'])]:size-4.5 sm:[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-            sizeValue === "sm" ? "end-0" : "end-0.5",
+            uiSize === "sm" ? "end-0" : "end-0.5",
           )}
         >
           <XIcon />

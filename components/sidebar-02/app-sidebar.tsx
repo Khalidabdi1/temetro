@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Kbd, KbdGroup } from "@/components/ui/kbd"
 import Particle from "./Command";
 import Image from "next/image";
 

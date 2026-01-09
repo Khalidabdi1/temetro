@@ -20,7 +20,7 @@ export default function DashboardLayout({
         {/* الشريط الجانبي الثابت */}
         <DashboardSidebar />
 {/*here change color*/}
-        <SidebarInset className="flex flex-col flex-1  overflow-y-scroll" >
+        <SidebarInset className="flex flex-col flex-1  overflow-y-auto" >
           {/* الهيدر العلوي الذي يحتوي على زر الموبايل */}
           <header className="flex h-5 items-center gap-2  px-4 shrink-0">
             <SidebarTrigger  className="md:hidden"/>

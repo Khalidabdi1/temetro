@@ -10,6 +10,10 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { Kbd, KbdGroup } from "@/components/ui/kbd"
+import Particle from "./Command";
+import Image from "next/image";
+
 import {
   Activity,
   DollarSign,
@@ -26,11 +30,11 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import { Logo } from "@/components/sidebar-02/logo";
+import { Logo } from "./logo";
 import type { Route } from "./nav-main";
-import DashboardNavigation from "@/components/sidebar-02/nav-main";
-import { NotificationsPopover } from "@/components/sidebar-02/nav-notifications";
-import { TeamSwitcher } from "@/components/sidebar-02/team-switcher";
+import DashboardNavigation from "./nav-main";
+import { NotificationsPopover } from "./nav-notifications";
+import { TeamSwitcher } from "./team-switcher";
 
 const sampleNotifications = [
   {
@@ -63,6 +67,8 @@ const dashboardRoutes: Route[] = [
     icon: <Home className="size-4" />,
     link: "#",
   },
+ 
+  
   {
     id: "products",
     title: "Products",
@@ -71,7 +77,7 @@ const dashboardRoutes: Route[] = [
     subs: [
       {
         title: "Catalogue",
-        link: "#",
+        link: "/dashboard/products",
         icon: <Package2 className="size-4" />,
       },
       {
@@ -191,12 +197,13 @@ export function DashboardSidebar() {
         )}
       >
         <a href="#" className="flex items-center gap-2">
-          <Logo className="h-8 w-8" />
-          {!isCollapsed && (
+          <Image src={"/logo2.png"} height={50} width={50} alt="logo"/>
+          {/* <Logo className="h-8 w-8" /> */}
+          {/* {!isCollapsed && (
             <span className="font-semibold text-black dark:text-white">
-              Acme
+              temetro
             </span>
-          )}
+          )} */}
         </a>
 
         <motion.div
@@ -210,10 +217,27 @@ export function DashboardSidebar() {
           transition={{ duration: 0.8 }}
         >
           <NotificationsPopover notifications={sampleNotifications} />
+
           <SidebarTrigger />
         </motion.div>
+       
       </SidebarHeader>
       <SidebarContent className="gap-4 px-2 py-4">
+             <motion.div
+          key={isCollapsed ? "header-collapsed" : "header-expanded"}
+          className={cn(
+            "flex items-center gap-2 w-full ",
+            isCollapsed ? "hidden" : "flex-row"
+          )}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+         <Particle/>
+        </motion.div>
+        
+        
+       
         <DashboardNavigation routes={dashboardRoutes} />
       </SidebarContent>
       <SidebarFooter className="px-2">

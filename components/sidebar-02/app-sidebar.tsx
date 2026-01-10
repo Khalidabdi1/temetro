@@ -28,7 +28,15 @@ import {
   Store,
   TrendingUp,
   Users,
+  FolderGit2,
+  Bot,
+  Star,
+  MoveUpRight,
+
 } from "lucide-react";
+
+
+
 import { Logo } from "./logo";
 import type { Route } from "./nav-main";
 import DashboardNavigation from "./nav-main";
@@ -60,35 +68,46 @@ const sampleNotifications = [
 ];
 
 const dashboardRoutes: Route[] = [
-  {
-    id: "home",
+   {
+    id: "Home",
     title: "Home",
     icon: <Home className="size-4" />,
-    link: "#",
+    link: "/dashboard/Home",
+  
   },
+
+    {
+    id:"ai",
+    title:"AI",
+    icon:   <Bot className="size-4" />,
+    link:"/dashboard/AI",
+  },
+ 
+
  
   
   {
-    id: "products",
-    title: "Products",
+    id: "Repositorie",
+    title: "Repositories",
     icon: <Package2 className="size-4" />,
     link: "#",
     subs: [
       {
-        title: "Catalogue",
-        link: "/dashboard/products",
-        icon: <Package2 className="size-4" />,
+        title: "New Repositories",
+        link: "/dashboard/Repositories/new",
+        icon:     <FolderGit2 className="size-4"/>
+
       },
       {
-        title: "Checkout Links",
+        title: "All Repositories",
         link: "#",
         icon: <LinkIcon className="size-4" />,
       },
-      {
-        title: "Discounts",
-        link: "#",
-        icon: <Percent className="size-4" />,
-      },
+      // {
+      //   title: "Stared",
+      //   link: "#",
+      //   icon:  <Star className="size-4" />
+      // },
     ],
   },
   {
@@ -145,12 +164,7 @@ const dashboardRoutes: Route[] = [
     icon: <Store className="size-4" />,
     link: "#",
   },
-  {
-    id: "analytics",
-    title: "Analytics",
-    icon: <TrendingUp className="size-4" />,
-    link: "#",
-  },
+
   {
     id: "finance",
     title: "Finance",
@@ -168,10 +182,16 @@ const dashboardRoutes: Route[] = [
     icon: <Settings className="size-4" />,
     link: "#",
     subs: [
-      { title: "General", link: "#" },
-      { title: "Webhooks", link: "#" },
-      { title: "Custom Fields", link: "#" },
+      { title: "Profile", link: "#" },
+      // { title: "Webhooks", link: "#" },
+      // { title: "Custom Fields", link: "#" },
     ],
+  },
+    {
+    id: "Documentation",
+    title: "Documentation",
+    icon: <MoveUpRight className="size-4"/>,
+    link: "#",
   },
 ];
 

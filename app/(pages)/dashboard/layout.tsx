@@ -27,7 +27,7 @@ export default function DashboardLayout({
           </header>
 
           {/* هنا يتم عرض محتوى الصفحة الذي يتغير (children) */}
-          <main className="p-2  ">
+          <main className="p-2   h-full w-full">
             {children}
           </main>
         </SidebarInset>

@@ -110,72 +110,72 @@ const dashboardRoutes: Route[] = [
       // },
     ],
   },
-  {
-    id: "usage-billing",
-    title: "Usage Billing",
-    icon: <PieChart className="size-4" />,
-    link: "#",
-    subs: [
-      {
-        title: "Meters",
-        link: "#",
-        icon: <PieChart className="size-4" />,
-      },
-      {
-        title: "Events",
-        link: "#",
-        icon: <Activity className="size-4" />,
-      },
-    ],
-  },
-  {
-    id: "benefits",
-    title: "Benefits",
-    icon: <Sparkles className="size-4" />,
-    link: "#",
-  },
-  {
-    id: "customers",
-    title: "Customers",
-    icon: <Users className="size-4" />,
-    link: "#",
-  },
-  {
-    id: "sales",
-    title: "Sales",
-    icon: <ShoppingBag className="size-4" />,
-    link: "#",
-    subs: [
-      {
-        title: "Orders",
-        link: "#",
-        icon: <ShoppingBag className="size-4" />,
-      },
-      {
-        title: "Subscriptions",
-        link: "#",
-        icon: <Infinity className="size-4" />,
-      },
-    ],
-  },
-  {
-    id: "storefront",
-    title: "Storefront",
-    icon: <Store className="size-4" />,
-    link: "#",
-  },
+  // {
+  //   id: "usage-billing",
+  //   title: "Usage Billing",
+  //   icon: <PieChart className="size-4" />,
+  //   link: "#",
+  //   subs: [
+  //     {
+  //       title: "Meters",
+  //       link: "#",
+  //       icon: <PieChart className="size-4" />,
+  //     },
+  //     {
+  //       title: "Events",
+  //       link: "#",
+  //       icon: <Activity className="size-4" />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "benefits",
+  //   title: "Benefits",
+  //   icon: <Sparkles className="size-4" />,
+  //   link: "#",
+  // },
+  // {
+  //   id: "customers",
+  //   title: "Customers",
+  //   icon: <Users className="size-4" />,
+  //   link: "#",
+  // },
+  // {
+  //   id: "sales",
+  //   title: "Sales",
+  //   icon: <ShoppingBag className="size-4" />,
+  //   link: "#",
+  //   subs: [
+  //     {
+  //       title: "Orders",
+  //       link: "#",
+  //       icon: <ShoppingBag className="size-4" />,
+  //     },
+  //     {
+  //       title: "Subscriptions",
+  //       link: "#",
+  //       icon: <Infinity className="size-4" />,
+  //     },
+  //   ],
+  // },
+  // {
+  //   id: "storefront",
+  //   title: "Storefront",
+  //   icon: <Store className="size-4" />,
+  //   link: "#",
+  // },
 
-  {
-    id: "finance",
-    title: "Finance",
-    icon: <DollarSign className="size-4" />,
-    link: "#",
-    subs: [
-      { title: "Incoming", link: "#" },
-      { title: "Outgoing", link: "#" },
-      { title: "Payout Account", link: "#" },
-    ],
-  },
+  // {
+  //   id: "finance",
+  //   title: "Finance",
+  //   icon: <DollarSign className="size-4" />,
+  //   link: "#",
+  //   subs: [
+  //     { title: "Incoming", link: "#" },
+  //     { title: "Outgoing", link: "#" },
+  //     { title: "Payout Account", link: "#" },
+  //   ],
+  // },
   {
     id: "settings",
     title: "Settings",

@@ -21,11 +21,13 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { useRouter } from "next/navigation";
 
 export interface Item {
   value: string;
   label: string;
   shortcut?: string;
+  link:string
 }
 
 export interface Group {
@@ -34,30 +36,33 @@ export interface Group {
 }
 
 export const suggestions: Item[] = [
-  { label: "Linear", shortcut: "⌘L", value: "linear" },
-  { label: "Figma", shortcut: "⌘F", value: "figma" },
-  { label: "Slack", shortcut: "⌘S", value: "slack" },
-  { label: "YouTube", shortcut: "⌘Y", value: "youtube" },
-  { label: "Raycast", shortcut: "⌘R", value: "raycast" },
+  { label: "Home", value: "Home",link:"/dashboard/Home" },
+  { label: "AI", value: "AI" ,link:"/dashboard/AI" },
+  { label: "settings", value: "settings" ,link:"/dashboard/settings" },
+  { label: "YouTube", value: "youtube" ,link:"" },
+  { label: "Raycast", value: "raycast" ,link:"" },
 ];
 
 export const commands: Item[] = [
-  { label: "Clipboard History", shortcut: "⌘⇧C", value: "clipboard-history" },
-  { label: "Import Extension", shortcut: "⌘I", value: "import-extension" },
-  { label: "Create Snippet", shortcut: "⌘N", value: "create-snippet" },
-  { label: "System Preferences", shortcut: "⌘,", value: "system-preferences" },
-  { label: "Window Management", shortcut: "⌘⇧W", value: "window-management" },
+  { label: "Clipboard History", shortcut: "⌘⇧C", value: "clipboard-history",link:""  },
+  { label: "Import Extension", shortcut: "⌘I", value: "import-extension",link:""  },
+  { label: "Create Snippet", shortcut: "⌘N", value: "create-snippet" ,link:"" },
+  { label: "System Preferences", shortcut: "⌘,", value: "system-preferences" ,link:"" },
+  { label: "Window Management", shortcut: "⌘⇧W", value: "window-management",link:""  },
 ];
 
 export const groupedItems: Group[] = [
-  { items: suggestions, value: "Suggestions" },
+  { items: suggestions, value: "Page" },
   { items: commands, value: "Commands" },
 ];
 
 export default function Particle() {
   const [open, setOpen] = React.useState(false);
+  const router =useRouter()
 
   function handleItemClick(_item: Item) {
+    console.log(_item.value)
+    router.push(_item.link)
     setOpen(false);
   }
 

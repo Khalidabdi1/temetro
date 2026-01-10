@@ -36,7 +36,6 @@ export default function Ai01() {
   const [isExpanded, setIsExpanded] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-    const inputRef = useRef<HTMLTextAreaElement>(null);
 
 
 
@@ -64,13 +63,21 @@ export default function Ai01() {
 ];
 
 
-  const handlePromptClick = (prompt: string) => {
-    if (inputRef.current) {
-      inputRef.current.value = prompt;
-      setMessage(prompt);
-      inputRef.current.focus();
-    }
-  };
+const handlePromptClick = (prompt: string) => {
+  if (textareaRef.current) {
+    setMessage(prompt);
+    
+    textareaRef.current.focus();
+
+
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto";
+        textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      }
+    }, 0);
+  }
+};
 
 
   const handleSubmit = (e: React.FormEvent) => {

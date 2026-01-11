@@ -19,6 +19,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "temetro",
   description: "Search through the GitHup repositories",
+  icons:{
+    icon:"/logo.jpg"
+  }
   
 };
 

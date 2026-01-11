@@ -4,7 +4,7 @@ import { Suspense } from "react"
 
 const Page = () => {
   return (
-    <Suspense fallback={<div className="p-10 text-center">Loading Verification...</div>}>
+    <Suspense fallback={<div className="p-10 text-center ">Loading Verification...</div>}>
    <SignupForm/>
    </Suspense>
   )

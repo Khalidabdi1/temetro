@@ -18,3 +18,5 @@ export const LoginSchema =z.object({
     Email:z.email("This email is invalid."),
     Password:z.string().min(8,"The password must be at least 8 characters long.")
 })
+
+export const verifyemail=z.email("Not a valid email")

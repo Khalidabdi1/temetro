@@ -179,19 +179,18 @@ setLoading(false)
                   name="Email"
                   placeholder="m@example.com"
                   required
+                  size={"lg"}
                 />
               </Field>
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
+                  <Link href={"/auth/Forgot"}   className="ml-auto text-sm underline-offset-4 hover:underline">
+                   Forgot your password?
+                  </Link>
+               
                 </div>
-                <Input id="password" type="password" name="Password" required />
+                <Input id="password" type="password" name="Password" required size={"lg"} placeholder="passowrd" />
                 {errors.Password && <FieldError>{errors.Password[0]}</FieldError>}
                 {errors.massage && <FieldError>{errors.massage[0]}</FieldError>}
               </Field>

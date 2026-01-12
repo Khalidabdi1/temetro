@@ -19,4 +19,6 @@ export const LoginSchema =z.object({
     Password:z.string().min(8,"The password must be at least 8 characters long.")
 })
 
+//verify email when the user forgot email
 export const verifyemail=z.email("Not a valid email")
+export const newPasswords =z.string().min(8,"The password must be more than 8 characters long.")

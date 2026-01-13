@@ -3,6 +3,8 @@
 import { ArrowDownIcon, ArrowUpIcon, CornerDownLeftIcon } from "lucide-react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes"
+
 import {
   Command,
   CommandCollection,
@@ -27,7 +29,7 @@ export interface Item {
   value: string;
   label: string;
   shortcut?: string;
-  link:string
+  link?:string
 }
 
 export interface Group {
@@ -51,18 +53,32 @@ export const commands: Item[] = [
   { label: "Window Management", shortcut: "⌘⇧W", value: "window-management",link:""  },
 ];
 
+// export const theme :Item[]=[
+//   {label:"Dark",value:"Dark"},
+//   {label:"Light" ,value:"Light"}
+// ]
+
 export const groupedItems: Group[] = [
   { items: suggestions, value: "Page" },
   { items: commands, value: "Commands" },
+  // {items:theme ,value:"Theme"}
 ];
 
 export default function Particle() {
   const [open, setOpen] = React.useState(false);
   const router =useRouter()
+  // const {setTheme}=useTheme()
 
   function handleItemClick(_item: Item) {
     console.log(_item.value)
-    router.push(_item.link)
+    router.push(_item.link as string)
+    console.log(_item.value)
+    // if need theme but is bad idea now
+    // if(_item.label==="Dark"){
+    //   setTheme("dark")
+    // }else if(_item.label==="Light"){
+    //   setTheme("light")
+    // }
     setOpen(false);
   }
 

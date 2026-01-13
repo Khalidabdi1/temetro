@@ -44,6 +44,15 @@ export function SignupForm({
 //to do add animiation unitl sand to backend form shadcn Spinner
   const [errors, setErrors] = useState<Record<string, string[]>>({});
     const[loading,setLoading]=useState<boolean>(false)
+    const [info,SetInfo]=useState<{Name:string,Email:string,password:string,confirmPassword:string}>({
+      Name:"",
+      Email:"",
+      password:"",
+      confirmPassword:""
+
+    })
+
+    const isFormValid=info.Name.trim()!=="" && info.Email.trim() !=="" && info.password.trim()!==""&& info.confirmPassword.trim()!==""
 
 
     const router = useRouter();
@@ -200,7 +209,10 @@ export function SignupForm({
               <Field>
 
                 <FieldLabel htmlFor="name">Full Name</FieldLabel>
-                <Input id="name" name="Name" type="text" placeholder="John Doe" required />
+                <Input id="name" name="Name" type="text" placeholder="John Doe" required onChange={((e)=>{
+                  const val =e.target.value
+                  SetInfo(prev=>({...prev,Name:val}))
+                })}/>
               </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -210,6 +222,10 @@ export function SignupForm({
                   type="email"
                   placeholder="m@example.com"
                   required
+                  onChange={((e)=>{
+                      const val =e.target.value
+                  SetInfo(prev=>({...prev,Email:val}))
+                  })}
                 />
                 {errors.Email && <FieldError>{errors.Email[0]}</FieldError>}
                 {errors.registered && <FieldError>{errors.registered[0]}</FieldError>}
@@ -220,14 +236,24 @@ export function SignupForm({
                 <Field className="grid grid-cols-2 gap-4">
                   <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" name="Password" type="password" required />
+                    <Input id="password" name="Password" type="password" required 
+                     onChange={((e)=>{
+                      const val =e.target.value
+                  SetInfo(prev=>({...prev,password:val}))
+                  })}
+                    />
                        {errors.confirmPasswords && <FieldError>{errors.confirmPasswords[0]}</FieldError>}
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="confirm-password">
                       Confirm Password
                     </FieldLabel>
-                    <Input id="confirm-password" name="Confirm-password" type="password" required />
+                    <Input id="confirm-password" name="Confirm-password" type="password" required 
+                     onChange={((e)=>{
+                      const val =e.target.value
+                  SetInfo(prev=>({...prev,confirmPassword:val}))
+                  })}
+                    />
                   </Field>
                 </Field>
                 {errors.confirmPassword && <FieldError>{errors.confirmPassword[0]}</FieldError>}
@@ -237,7 +263,7 @@ export function SignupForm({
                 </FieldDescription>
               </Field>
               <Field>
-                <Button type="submit">Create Account</Button>
+                <Button type="submit" disabled={!isFormValid}>Create Account</Button>
                 <FieldDescription className="text-center">
                   Already have an account?
                   <Link href={"/auth/login"}>

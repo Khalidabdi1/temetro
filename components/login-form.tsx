@@ -28,7 +28,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { authClient } from "@/lib/auth-client"
 import { LoginSchema } from "@/lib/zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import * as z from "zod"
 import { useRouter } from "next/navigation"; 
 
@@ -45,6 +45,7 @@ export function LoginForm({
     password:""
   })
 const router = useRouter();
+const isFormValid=info.email.trim()!=="" && info.password.trim()!==""
 
 
   //zod issue
@@ -132,6 +133,11 @@ setLoading(false)
   }
 
   }
+
+
+ 
+
+
   return (
 
 
@@ -180,6 +186,12 @@ setLoading(false)
                   placeholder="m@example.com"
                   required
                   size={"lg"}
+                  value={info.email}
+                  onChange={((e)=>{
+                    const val =e.target.value
+setInfo(prev=>({...prev,email:val}))
+
+                  })}
                 />
               </Field>
               <Field>
@@ -190,12 +202,17 @@ setLoading(false)
                   </Link>
                
                 </div>
-                <Input id="password" type="password" name="Password" required size={"lg"} placeholder="passowrd" />
+                <Input onChange={((e)=>{
+                            const val =e.target.value
+setInfo(prev=>({...prev,password:val}))
+
+                })}
+                id="password" type="password" name="Password" required size={"lg"} placeholder="passowrd" value={info.password} />
                 {errors.Password && <FieldError>{errors.Password[0]}</FieldError>}
                 {errors.massage && <FieldError>{errors.massage[0]}</FieldError>}
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={!isFormValid}>Login</Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?
                   <Link href={"/auth/signup"}>

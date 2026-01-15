@@ -3,11 +3,13 @@ import type { NextRequest } from "next/server";
 
 export  function middleware(request:NextRequest){
     console.log("--- الـ Middleware يعمل الآن على مسار: ", request.nextUrl.pathname);
-    const sessionsToken=request.cookies.get("better_auth.session_token") || request.cookies.get("__Secure-better_auth.session_token")
+  const sessionsToken = 
+        request.cookies.get("__Secure-better_auth.session_token") || 
+        request.cookies.get("better_auth.session_token");
 
-    const isDashboard =request.nextUrl.pathname.startsWith("/dashboard")
+        const isDashboard = request.nextUrl.pathname.startsWith("/dashboard");
 
-    if(isDashboard && !sessionsToken){
+    if(!sessionsToken && isDashboard){
         console.log("❌ مستخدم غير مسجل، جاري التحويل للـ Login");
         return NextResponse.redirect(new URL("/auth/login",request.url))
 

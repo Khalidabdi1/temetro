@@ -65,41 +65,7 @@ const sampleNotifications = [
     text: "New order received.",
     time: "10m ago",
   },
-    {
-    id: "1",
-    avatar: "/avatars/01.png",
-    fallback: "OM",
-    text: "New order received.",
-    time: "10m ago",
-  },
-    {
-    id: "1",
-    avatar: "/avatars/01.png",
-    fallback: "OM",
-    text: "New order received.",
-    time: "10m ago",
-  },
-    {
-    id: "1",
-    avatar: "/avatars/01.png",
-    fallback: "OM",
-    text: "New order received.",
-    time: "10m ago",
-  },
-  {
-    id: "2",
-    avatar: "/avatars/02.png",
-    fallback: "JL",
-    text: "Server upgrade completed.",
-    time: "1h ago",
-  },
-  {
-    id: "3",
-    avatar: "/avatars/03.png",
-    fallback: "HH",
-    text: "New user signed up.",
-    time: "2h ago",
-  },
+
 ];
 
 const dashboardRoutes: Route[] = [
@@ -215,9 +181,10 @@ const dashboardRoutes: Route[] = [
     id: "settings",
     title: "Settings",
     icon: <Settings className="size-4" />,
-    link: "#",
+    link: "/dashboard/settings/Profile",
     subs: [
-      { title: "Profile", link: "#" },
+      { title: "Profile", link: "/dashboard/settings/Profile" },
+      {title:"Subscription",link:"/dashboard/settings/Subscription"}
       // { title: "Webhooks", link: "#" },
       // { title: "Custom Fields", link: "#" },
     ],
@@ -241,7 +208,7 @@ export function DashboardSidebar() {
   const isCollapsed = state === "collapsed";
 
   return (
-    <Sidebar variant="inset" collapsible="icon">
+    <Sidebar variant="inset" collapsible="icon" className="">
       <SidebarHeader
         className={cn(
           "flex md:pt-3.5",

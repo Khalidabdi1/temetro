@@ -96,6 +96,7 @@ export default function DashboardNavigation({ routes }: { routes: Route[] }) {
                               className="flex items-center rounded-md px-4 py-1.5 text-sm font-medium text-muted-foreground hover:bg-sidebar-muted hover:text-foreground"
                             >
                               {subRoute.title}
+                              
                             </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>

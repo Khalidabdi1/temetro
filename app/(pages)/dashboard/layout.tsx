@@ -18,7 +18,7 @@ export default function DashboardLayout({
     <SidebarProvider>
       <div className="flex h-screen w-full">
         {/* الشريط الجانبي الثابت */}
-        <DashboardSidebar />
+        <DashboardSidebar/>
 {/*here change color*/}
         <SidebarInset className="flex flex-col flex-1  overflow-y-auto" >
           {/* الهيدر العلوي الذي يحتوي على زر الموبايل */}

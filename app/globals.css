@@ -136,6 +136,9 @@
   --warning-foreground: var(--color-amber-400);
 }
 
+
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

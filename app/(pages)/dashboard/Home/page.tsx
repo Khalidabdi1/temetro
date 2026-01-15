@@ -5,7 +5,7 @@ import { date } from 'zod'
 
 export default function Page(){
   const{data:session, isPending,error}=authClient.useSession()
-  if(!isPending)return <div>looding....</div>
+  if(isPending)return <div>looding....</div>
   if(error) return <div>error...</div>
   return (
     <div>

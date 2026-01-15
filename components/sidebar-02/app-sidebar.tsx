@@ -70,8 +70,8 @@ const sampleNotifications = [
 
 const dashboardRoutes: Route[] = [
    {
-    id: "Home",
-    title: "Home",
+    id: "Dashboard",
+    title: "Dashboard",
     icon: <Home className="size-4" />,
     link: "/dashboard/Home",
   

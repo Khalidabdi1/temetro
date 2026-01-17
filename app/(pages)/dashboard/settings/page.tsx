@@ -1,11 +1,5 @@
-import React from 'react'
+import { redirect } from "next/navigation";
 
-const page = () => {
-  return (
-    <div>
-      settings
-    </div>
-  )
+export default function SettingsPage() {
+  redirect("/dashboard/settings/Profile");
 }
-
-export default page

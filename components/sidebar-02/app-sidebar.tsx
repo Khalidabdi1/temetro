@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Particle from "./Command";
 import Image from "next/image";
+import { UserRound } from 'lucide-react';
 
 import {
   Activity,
@@ -70,17 +71,17 @@ const sampleNotifications = [
 
 const dashboardRoutes: Route[] = [
    {
-    id: "Dashboard",
-    title: "Dashboard",
+    id: "Home",
+    title: "Home",
     icon: <Home className="size-4" />,
     link: "/dashboard/Home",
   
   },
 
     {
-    id:"ai",
-    title:"AI",
-    icon:   <Bot className="size-4" />,
+    id:"Members",
+    title:"Members",
+    icon:   <UserRound className="size-4" />,
     link:"/dashboard/AI",
   },
  

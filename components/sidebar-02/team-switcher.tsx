@@ -17,6 +17,12 @@ import {
 } from "@/components/ui/sidebar";
 import { ChevronsUpDown, Plus } from "lucide-react";
 import * as React from "react";
+import { LogOut } from 'lucide-react';
+import { supabase } from "@/lib/supabase";
+import {  useState} from "react";
+import { useEffect } from "react";
+import Image from "next/image";
+
 
 type Team = {
   name: string;
@@ -27,10 +33,47 @@ type Team = {
 export function TeamSwitcher({ teams }: { teams: Team[] }) {
   const { isMobile } = useSidebar();
   const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+const [userName, setUserName] = useState<string | null>(null);
+const [Info,SetInfo]=useState<{Name:string,img:string}>({
+  Name:"",
+  img:""
+})
+  
+
+  const Logo = activeTeam.logo;
+
+  // user name
+
+  // async function userInfo (){
+  //   const res =await supabase.auth.getUser()
+
+    
+  // }
+
+ useEffect(() => {
+    const fetchUser = async () => {
+      // إحضار بيانات المستخدم الحالية
+      const { data: { user }, error } = await supabase.auth.getUser();
+
+      if (user) {
+        // إذا كنت قد خزنت الاسم في الـ user_metadata أثناء التسجيل
+        setUserName(user.user_metadata?.Name || user.email);
+        console.log("بيانات المستخدم كاملة:", user);
+        SetInfo(prev=>({...prev,img:user.user_metadata.picture}))
+        console.log(user.user_metadata.picture)
+        
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  console.log(Info)
 
   if (!activeTeam) return null;
 
-  const Logo = activeTeam.logo;
+  
+
 
   return (
     <SidebarMenu>
@@ -42,7 +85,9 @@ export function TeamSwitcher({ teams }: { teams: Team[] }) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-background text-foreground">
-                <Logo className="size-4" />
+                {/* <Logo className="size-4" /> */}
+                
+                <Image src={Info.img} alt="logo" width={30} height={30}></Image>
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
@@ -60,7 +105,7 @@ export function TeamSwitcher({ teams }: { teams: Team[] }) {
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Teams
+              Teams ss
             </DropdownMenuLabel>
             {teams.map((team, index) => (
               <DropdownMenuItem
@@ -76,11 +121,13 @@ export function TeamSwitcher({ teams }: { teams: Team[] }) {
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                <Plus className="size-4" />
+            <DropdownMenuItem className="gap-2 p-2 ">
+              <div className="flex size-6 items-center justify-center rounded-md border bg-background" >
+                <LogOut className="size-4" />
               </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
+
+              <div className="font-medium text-muted-foreground">Sign out</div>
+
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,13 +1,11 @@
 import React from 'react'
-
+import Component from '@/components/comp-594'
 const Header = () => {
   return (
-    <div>
+   
     
-    <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-     Dashboard
-    </h3>
-    </div>
+    <Component/>
+    
   )
 }
 

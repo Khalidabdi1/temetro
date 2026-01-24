@@ -1,15 +1,20 @@
 "use client"
 import React from 'react'
 import { authClient } from '@/lib/auth-client'
-import { date } from 'zod'
+import Header from "./header"
+import Content from './content'
 
 export default function Page(){
   const{data:session, isPending,error}=authClient.useSession()
-  if(isPending)return <div>looding....</div>
-  if(error) return <div>error...</div>
+
+  // if(isPending)return <div>looding....</div>
+  // if(error) return <div>error...</div>
+
+
   return (
     <div>
-      HOME your name is {session?.user?.name}
+      <Header/>
+      <Content/>
     </div>
   )
 }

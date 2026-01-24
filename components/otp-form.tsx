@@ -19,6 +19,7 @@ import { useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
+import { supabase } from "@/lib/supabase"
 
 
 type OTPFormProps = React.ComponentProps<"div"> & {
@@ -36,9 +37,15 @@ export function OTPForm({ email, className, ...props }: OTPFormProps) {
     event.preventDefault()
  
 
-  const{data,error}=await authClient.emailOtp.verifyEmail({
+  // const{data,error}=await authClient.emailOtp.verifyEmail({
+  //   email:Email,
+  //   otp:otp
+  // })
+
+  const {data, error}=await supabase.auth.verifyOtp({
     email:Email,
-    otp:otp
+    token:otp,
+    type:"signup"
   })
 
   if(error){
@@ -83,7 +90,7 @@ console.log("sign up successfuly :",data)
               SetOtp(value)
               console.log(value)
             }}
-              maxLength={6}
+              maxLength={8}
               id="otp"
               required
               containerClassName="gap-4 flex-wrap justify-center"
@@ -127,6 +134,26 @@ console.log("sign up successfuly :",data)
                 <InputOTPSlot index={3} />
                 <InputOTPSlot index={4} />
                 <InputOTPSlot index={5} />
+              </InputOTPGroup>
+
+
+                <InputOTPGroup className="  gap-2
+              *:data-[slot=input-otp-slot]:border
+
+    *:data-[slot=input-otp-slot]:h-12
+    *:data-[slot=input-otp-slot]:w-10
+    *:data-[slot=input-otp-slot]:text-lg
+
+    sm:gap-2.5
+    sm:*:data-[slot=input-otp-slot]:h-14
+    sm:*:data-[slot=input-otp-slot]:w-11
+    sm:*:data-[slot=input-otp-slot]:text-xl
+
+    md:*:data-[slot=input-otp-slot]:h-16
+    md:*:data-[slot=input-otp-slot]:w-12">
+                <InputOTPSlot index={6} />
+                <InputOTPSlot index={7} />
+                
               </InputOTPGroup>
             </InputOTP>
             <FieldDescription className="text-center">

@@ -211,7 +211,7 @@ export function DashboardSidebar() {
     <Sidebar variant="inset" collapsible="icon" className="">
       <SidebarHeader
         className={cn(
-          "flex md:pt-3.5",
+          "flex md:pt-3.5 bg-[#070708]",
           isCollapsed
             ? "flex-row items-center justify-between gap-y-4 md:flex-col md:items-start md:justify-start"
             : "flex-row items-center justify-between"
@@ -243,7 +243,7 @@ export function DashboardSidebar() {
         </motion.div>
        
       </SidebarHeader>
-      <SidebarContent className="gap-4 px-2 py-4">
+      <SidebarContent className="gap-4 px-2 py-4 bg-[#070708]">
              <motion.div
           key={isCollapsed ? "header-collapsed" : "header-expanded"}
           className={cn(
@@ -261,7 +261,7 @@ export function DashboardSidebar() {
        
         <DashboardNavigation routes={dashboardRoutes} />
       </SidebarContent>
-      <SidebarFooter className="px-2">
+      <SidebarFooter className="px-2 bg-[#070708]">
         <TeamSwitcher teams={teams} />
       </SidebarFooter>
     </Sidebar>

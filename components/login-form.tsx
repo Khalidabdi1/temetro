@@ -31,6 +31,7 @@ import { LoginSchema } from "@/lib/zod"
 import { useEffect, useState } from "react"
 import * as z from "zod"
 import { useRouter } from "next/navigation"; 
+import { supabase } from "@/lib/supabase"
 
 
 export function LoginForm({
@@ -46,6 +47,8 @@ export function LoginForm({
   })
 const router = useRouter();
 const isFormValid=info.email.trim()!=="" && info.password.trim()!==""
+const origin = typeof window !== "undefined" ? window.location.origin : "";
+
 
 
   //zod issue
@@ -95,19 +98,25 @@ const isFormValid=info.email.trim()!=="" && info.password.trim()!==""
 
 try{
   setLoading(true)
-  const res =await authClient.signIn.email({
+  // const res =await authClient.signIn.email({
+  //   email:result.data.Email,
+  //   password:result.data.Password
+  // })
+
+  const {data,error} =await supabase.auth.signInWithPassword({
     email:result.data.Email,
     password:result.data.Password
   })
 
-  if(res.error){
+  if(error){
     setErrors({massage:["Incorrect password or email"]})
     setLoading(false)
     return
   }
-console.log("login successful ",res.data)
+console.log("login successful ",data)
 console.log("valid data",result.data)
 router.push("/dashboard")
+
 setLoading(false)
 
 }catch(error){
@@ -126,6 +135,18 @@ await authClient.signIn.social({
    callbackURL: `${process.env.NEXT_PUBLIC_FRONTEND}auth/callback`
 
 })
+
+const {data, error}=await supabase.auth.signInWithOAuth({
+  provider:"google",
+  options:{
+    redirectTo:`${origin}/dashboard`
+  }
+  
+})
+
+if(error){
+  console.log("error supabase is :",error)
+}
 setLoading(false)
   }catch (error){
        router.push("/error")

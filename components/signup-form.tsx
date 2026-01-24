@@ -33,7 +33,9 @@ import { useState } from "react"
 import { z } from "zod"
 
 import { SignupSchema } from "@/lib/zod"
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase"
+import { da } from "zod/v4/locales"
 
 
 export function SignupForm({
@@ -41,21 +43,21 @@ export function SignupForm({
   ...props
 }: React.ComponentProps<"div">) {
 
-//to do add animiation unitl sand to backend form shadcn Spinner
+  //to do add animiation unitl sand to backend form shadcn Spinner
   const [errors, setErrors] = useState<Record<string, string[]>>({});
-    const[loading,setLoading]=useState<boolean>(false)
-    const [info,SetInfo]=useState<{Name:string,Email:string,password:string,confirmPassword:string}>({
-      Name:"",
-      Email:"",
-      password:"",
-      confirmPassword:""
+  const [loading, setLoading] = useState<boolean>(false)
+  const [info, SetInfo] = useState<{ Name: string, Email: string, password: string, confirmPassword: string }>({
+    Name: "",
+    Email: "",
+    password: "",
+    confirmPassword: ""
 
-    })
+  })
 
-    const isFormValid=info.Name.trim()!=="" && info.Email.trim() !=="" && info.password.trim()!==""&& info.confirmPassword.trim()!==""
+  const isFormValid = info.Name.trim() !== "" && info.Email.trim() !== "" && info.password.trim() !== "" && info.confirmPassword.trim() !== ""
 
-
-    const router = useRouter();
+const origin = typeof window !== "undefined" ? window.location.origin : "";
+  const router = useRouter();
 
   //zod issue
   type FieldErrors = Record<string, string[]>;
@@ -76,11 +78,11 @@ export function SignupForm({
 
   }
 
-  
+
   //vaild the data
   async function test(event: React.FormEvent<HTMLFormElement>) {
     setLoading(true)
-    
+
     event.preventDefault()
     console.log("start valid")
 
@@ -101,7 +103,7 @@ export function SignupForm({
       console.log(result.error)
       const filedError = zodIssue(result.error.issues)
       setErrors(filedError)
-      console.log("the array of err is ",filedError)
+      console.log("the array of err is ", filedError)
       console.log(data)
       setLoading(false)
       return
@@ -113,33 +115,29 @@ export function SignupForm({
 
 
     try {
-      const res = await authClient.signUp.email({
-        name: result.data.Name as string,
-        email: result.data.Email as string,
-        password: result.data.Password as string,
-        // the link should change later to real one
-        callbackURL:"/dashboard"
-      })
+      //todo change to supabase
 
+      const { data, error } = await supabase.auth.signUp({
+        email: info.Email,
+        password: info.password,
+       
+        
+
+      })
       // if is sign up before 
-      
-      if (res.error){
-        console.log("error is ",res.error)
-        setErrors({registered: ["Email is already registered or invalid"]})
+
+      if (error) {
+        setLoading(false)
+        console.log("error is from supabase :", error)
         return
       }
+
+      console.log("successfull the data is :", data)
+      router.push(`${origin}/auth/verify?email=${info.Email}`)
+
       setLoading(false)
-      // if successful
-      console.log("sign up success:", res)
-
-      //verify email user 
-      await authClient.emailOtp.sendVerificationOtp({
-        email:result.data.Email,
-        type:"email-verification"
-      })
 
 
-      router.push(`/auth/verify?email=${result.data.Email}`)
 
     } catch (error) {
       console.log(" better auth sign up error error is ", error)
@@ -148,21 +146,26 @@ export function SignupForm({
     }
   }
 
-  //need fix google
+ //login with google
   async function handleLogin() {
     setLoading(true)
-      sessionStorage.removeItem("oauth_started")
+    sessionStorage.removeItem("oauth_started")
 
     try {
-      await authClient.signIn.social({
-        provider: "google",
-        //work one
-        // callbackURL: process.env.NEXT_PUBLIC_FRONTEND+"dashboard"
-        //test one
-         callbackURL: `${process.env.NEXT_PUBLIC_FRONTEND}/auth/callback`
+    const {data,error}= await supabase.auth.signInWithOAuth({
+      provider:"google",
+      options:{
+        redirectTo:`${origin}/dashboard`,
+      }
+    })
 
-      
-      })
+    if (error){
+      console.log("error with google :",error)
+      return
+    }
+
+    console.log("you are succefuly login with google:", data)
+
       setLoading(false)
     } catch (error) {
       router.push("/error")
@@ -209,10 +212,10 @@ export function SignupForm({
               <Field>
 
                 <FieldLabel htmlFor="name">Full Name</FieldLabel>
-                <Input id="name" name="Name" type="text" placeholder="John Doe" required onChange={((e)=>{
-                  const val =e.target.value
-                  SetInfo(prev=>({...prev,Name:val}))
-                })}/>
+                <Input id="name" name="Name" type="text" placeholder="John Doe" required onChange={((e) => {
+                  const val = e.target.value
+                  SetInfo(prev => ({ ...prev, Name: val }))
+                })} />
               </Field>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -222,9 +225,9 @@ export function SignupForm({
                   type="email"
                   placeholder="m@example.com"
                   required
-                  onChange={((e)=>{
-                      const val =e.target.value
-                  SetInfo(prev=>({...prev,Email:val}))
+                  onChange={((e) => {
+                    const val = e.target.value
+                    SetInfo(prev => ({ ...prev, Email: val }))
                   })}
                 />
                 {errors.Email && <FieldError>{errors.Email[0]}</FieldError>}
@@ -236,23 +239,23 @@ export function SignupForm({
                 <Field className="grid grid-cols-2 gap-4">
                   <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" name="Password" type="password" required 
-                     onChange={((e)=>{
-                      const val =e.target.value
-                  SetInfo(prev=>({...prev,password:val}))
-                  })}
+                    <Input id="password" name="Password" type="password" required
+                      onChange={((e) => {
+                        const val = e.target.value
+                        SetInfo(prev => ({ ...prev, password: val }))
+                      })}
                     />
-                       {errors.confirmPasswords && <FieldError>{errors.confirmPasswords[0]}</FieldError>}
+                    {errors.confirmPasswords && <FieldError>{errors.confirmPasswords[0]}</FieldError>}
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="confirm-password">
                       Confirm Password
                     </FieldLabel>
-                    <Input id="confirm-password" name="Confirm-password" type="password" required 
-                     onChange={((e)=>{
-                      const val =e.target.value
-                  SetInfo(prev=>({...prev,confirmPassword:val}))
-                  })}
+                    <Input id="confirm-password" name="Confirm-password" type="password" required
+                      onChange={((e) => {
+                        const val = e.target.value
+                        SetInfo(prev => ({ ...prev, confirmPassword: val }))
+                      })}
                     />
                   </Field>
                 </Field>
@@ -283,22 +286,22 @@ export function SignupForm({
       </FieldDescription>
 
       {/* for alert */}
-{loading===true &&
-   <div className="flex w-full max-w-xs flex-col gap-4 [--radius:1rem] absolute right-0 bottom-0 m-3">
-      <Item variant="muted">
-        <ItemMedia>
-          <Spinner />
-        </ItemMedia>
-        <ItemContent>
-          <ItemTitle className="line-clamp-1">Processing ...</ItemTitle>
-        </ItemContent>
-        {/* <ItemContent className="flex-none justify-end">
+      {loading === true &&
+        <div className="flex w-full max-w-xs flex-col gap-4 [--radius:1rem] absolute right-0 bottom-0 m-3">
+          <Item variant="muted">
+            <ItemMedia>
+              <Spinner />
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle className="line-clamp-1">Processing ...</ItemTitle>
+            </ItemContent>
+            {/* <ItemContent className="flex-none justify-end">
           <span className="text-sm tabular-nums">$100.00</span>
         </ItemContent> */}
-      </Item>
-    </div>
+          </Item>
+        </div>
 
-}
+      }
     </div>
   )
 }

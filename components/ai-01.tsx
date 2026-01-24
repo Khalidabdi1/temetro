@@ -42,24 +42,23 @@ export default function Ai01() {
   const PROMPTS = [
   {
     icon: IconFileSpark,
-    text: "Write documentation",
+    text: "Explain the structure & tech stack",
     prompt:
-      "Write comprehensive documentation for this codebase, including setup instructions, API references, and usage examples.",
+      "Explain the project structure, main folders, and technologies used.",
   },
   {
     icon: IconGauge,
-    text: "Optimize performance",
+    text: "How does the core logic work?",
     prompt:
-      "Analyze the codebase for performance bottlenecks and suggest optimizations to improve loading times and runtime efficiency.",
+      "Explain the core logic and important parts of the code in simple terms.",
   },
   {
     icon: IconAlertTriangle,
-    text: "Find and fix 3 bugs",
+    text: "What does this repository do?",
     prompt:
-      "Scan through the codebase to identify and fix 3 critical bugs, providing detailed explanations for each fix.",
-  },
+      "Explain what this repository does, its main goal, and who it is for."
 
-  
+  }
 ];
 
 
@@ -114,7 +113,7 @@ const handlePromptClick = (prompt: string) => {
   return (
     <div className="w-full">
       <h1 className="mb-7 mx-auto max-w-2xl text-center text-2xl font-semibold leading-9 text-foreground px-1 text-pretty whitespace-pre-wrap">
-        How can I help you today?
+       Explore Any GitHub Repo
       </h1>
 
       <form onSubmit={handleSubmit} className="group/composer w-full">

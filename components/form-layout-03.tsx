@@ -1,3 +1,4 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
@@ -11,9 +12,57 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/lib/supabase";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+
+
 
 export default function FormLayout03() {
+
+const [info,SetInfo]=useState<{Name:string,Email:string}>({
+  Name:"",
+  Email:""
+})
+
+
+  useEffect(() => {
+const fetch = async()=>{
+  try{
+    const {data:{session}}=await supabase.auth.getSession()
+    const Token =session?.access_token;
+
+    if(!Token){
+      console.log("No active session found")
+      return 
+    }
+
+  const response=await axios.get(process.env.NEXT_PUBLIC_BACKEND + "/Settings",{
+    headers:{
+      "Authorization":`Bearer ${Token}`,
+      "Content-Type":"application/json"
+    }
+   })
+
+   console.log("data resive :",response.data)
+
+   SetInfo(prev=>({...prev,Name:response.data.Name,Email:response.data.Email}))
+
+  }catch(error){
+    console.log("axios error is :",error)
+  }
+}
+
+
+fetch()
+
+  }, [])
+
   return (
+
+
+
     <div className="flex items-center justify-center p-10">
       <form>
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
@@ -35,11 +84,13 @@ export default function FormLayout03() {
                     id="first-name"
                     name="first-name"
                     autoComplete="given-name"
-                    placeholder="Emma"
+                    placeholder="Name"
+                    value={info.Name}
+                     disabled
                   />
                 </Field>
               </div>
-              <div className="col-span-full sm:col-span-3">
+              {/* <div className="col-span-full sm:col-span-3">
                 <Field className="gap-2">
                   <FieldLabel htmlFor="last-name">Last name</FieldLabel>
                   <Input
@@ -50,7 +101,7 @@ export default function FormLayout03() {
                     placeholder="Crown"
                   />
                 </Field>
-              </div>
+              </div> */}
               <div className="col-span-full">
                 <Field className="gap-2">
                   <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -60,6 +111,8 @@ export default function FormLayout03() {
                     name="email"
                     autoComplete="email"
                     placeholder="emma@company.com"
+                    value={info.Email}
+                    disabled
                   />
                 </Field>
               </div>
@@ -92,8 +145,8 @@ export default function FormLayout03() {
             </div>
           </div>
         </div>
-        <Separator className="my-8" />
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
+        {/* <Separator className="my-8" /> */}
+        {/* <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           <div>
             <h2 className="font-semibold text-foreground dark:text-foreground">
               Workspace settings
@@ -235,12 +288,13 @@ export default function FormLayout03() {
               </div>
             </fieldset>
           </div>
-        </div>
+        </div> */}
         <Separator className="my-8" />
         <div className="flex items-center justify-end space-x-4">
           <Button type="button" variant="outline" className="whitespace-nowrap">
             Go back
           </Button>
+
           <Button type="submit" className="whitespace-nowrap">
             Save settings
           </Button>

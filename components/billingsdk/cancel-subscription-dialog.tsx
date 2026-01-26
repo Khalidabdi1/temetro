@@ -140,7 +140,7 @@ export function CancelSubscriptionDialog({
         }
       }}
     >
-      <DialogTrigger asChild>
+      <DialogTrigger >
         <Button variant="outline">
           {triggerButtonText || "Cancel Subscription"}
         </Button>

@@ -58,9 +58,9 @@ const [Info,SetInfo]=useState<{Name:string,img:string}>({
       if (user) {
         // إذا كنت قد خزنت الاسم في الـ user_metadata أثناء التسجيل
         setUserName(user.user_metadata?.Name || user.email);
-        console.log("بيانات المستخدم كاملة:", user);
+        // console.log("بيانات المستخدم كاملة:", user);
         SetInfo(prev=>({...prev,img:user.user_metadata.picture}))
-        console.log(user.user_metadata.picture)
+        // console.log(user.user_metadata.picture)
         
       }
     };

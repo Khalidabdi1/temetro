@@ -82,7 +82,7 @@ const dashboardRoutes: Route[] = [
     id:"Members",
     title:"Members",
     icon:   <UserRound className="size-4" />,
-    link:"/dashboard/AI",
+    link:"/dashboard/Members",
   },
  
 

@@ -34,7 +34,7 @@ const fetch = async()=>{
     const Token =session?.access_token;
 
     if(!Token){
-      console.log("No active session found")
+      // console.log("No active session found")
       return 
     }
 
@@ -45,12 +45,12 @@ const fetch = async()=>{
     }
    })
 
-   console.log("data resive :",response.data)
+  //  console.log("data resive :",response.data)
 
    SetInfo(prev=>({...prev,Name:response.data.Name,Email:response.data.Email}))
 
   }catch(error){
-    console.log("axios error is :",error)
+    // console.log("axios error is :",error)
   }
 }
 

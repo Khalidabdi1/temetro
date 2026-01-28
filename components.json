@@ -22,6 +22,7 @@
     "@blocks": "https://blocks.so/r/{name}.json",
     "@coss": "https://coss.com/ui/r/{name}.json",
     "@assistant-ui": "https://r.assistant-ui.com/{name}.json",
-    "@billingsdk": "https://billingsdk.com/r/{name}.json"
+    "@billingsdk": "https://billingsdk.com/r/{name}.json",
+    "@kibo-ui": "https://www.kibo-ui.com/r/{name}.json"
   }
 }

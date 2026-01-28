@@ -25,11 +25,32 @@ import { supabase } from '@/lib/supabase';
 import ProjectDialog from '@/components/create-project';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useRouter } from 'next/navigation';
+
+
+
+interface ProjectType {
+    id: string;
+    name: string;
+    description: string;
+    owner_id: string;
+    created_at: string;
+    repo_url:string
+    // أضف أي حقول أخرى تأتي من السيرفر هنا
+}
+
+interface CardsGroupsProps {
+    list: ProjectType[];
+}
 
 export default function  Content()  {
 
-    const [project, SetProject] = useState<boolean>(true)
+    
 
+    const [project, SetProject] = useState<boolean>(true)
+    const [ProjectList,SetProjectList]=useState<any[]>([])
+
+    
     useEffect(() => {
 
         const res = async () => {
@@ -37,15 +58,23 @@ export default function  Content()  {
             //   console.log(userID.data.user?.id)
 
             axios.get(process.env.NEXT_PUBLIC_BACKEND + `/project?userID=${user?.id}`).then((db) => {
-                console.log(db.data)
+                console.log("project is",db.data.data)
+                
 
                 // if there is project show cards if not show empty
 
-                // if (db.data.message === "Projects not found") {
-                //     SetProject(false)
-                // } else {
-                //     SetProject(true)
-                // }
+                if (db.data.message === "Projects not found") {
+                    SetProject(false)
+                } else {
+                    SetProject(true)
+                }
+
+                if (db.data.data) {
+        SetProjectList(db.data.data); // تخزين المصفوفة
+        SetProject(db.data.data.length > 0); // إذا كانت المصفوفة أكبر من 0 أظهر الكروت
+    } else {
+        SetProject(false);
+    }
 
 
 
@@ -64,7 +93,7 @@ export default function  Content()  {
                 {/** if there is project show this card */}
 
                 {project === true &&
-              <CardsGroups/>
+              <CardsGroups list={ProjectList}/>
               
 
                 }
@@ -105,12 +134,14 @@ export default function  Content()  {
 }
 
 
-function CardsGroups(){
+function CardsGroups({list}:CardsGroupsProps){
     return(
         <>
-   <div className='grid grid-cols-3 space-y-3 space-x-3 '>
+   <div className='grid grid-cols-1 md:grid-cols-3 space-y-3 space-x-3 '>
 
-<Cards/>
+{list.map((item) => (
+                <Cards key={item.id} data={item} />
+            ))}
    </div>
 
 
@@ -118,21 +149,32 @@ function CardsGroups(){
     )
 }
 
-function Cards(){
+function Cards({ data }: { data: ProjectType }){
+    const router =useRouter()
+
+function SandUser(){
+    console.log("the repo link is :",data.repo_url)
+  const encodedUrl = encodeURIComponent(data.repo_url);
+    router.push(`/code?repo_url=${encodedUrl}`);
+
+}
+
     return(
-<Frame className='w-[350px] bg-[#171719] border-none  overflow-hidden col-span-1 hover:cursor-pointer'>
+<Frame className='w-[350px] h-fit bg-[#171719] border-none  overflow-hidden col-span-1 hover:cursor-pointer' onClick={(()=>{
+SandUser()
+})}>
     <FramePanel className='bg-[#101011] flex flex-col space-y-6 border-none'>
         
         {/* الجزء العلوي: الأيقونة والأفاتار */}
         <div className='flex justify-between items-start mb-0'>
             
             {/* حاوية الصورة: تحكم في الحجم من هنا دون التأثير على البقية */}
-            <div className='w-24 h-20 relative '> 
+            <div className='w-24 h-20 relative flex justify-start '> 
                 <Image 
                     src="/file.png" 
                     fill // يجعل الصورة تملأ الحاوية الخاصة بها فقط
                     alt='file icon' 
-                    className='object-contain' // يحافظ على أبعاد الصورة دون تشويه
+                    className='object-contain ' // يحافظ على أبعاد الصورة دون تشويه
                 />
             </div>
 
@@ -159,9 +201,9 @@ function Cards(){
 
         {/* النصوص: تأخذ المساحة المتبقية بسلاسة */}
         <div className='space-y-2'>
-            <h2 className="text-white text-2xl font-bold tracking-tight">Privacy Policy</h2>
+            <h2 className="text-white text-2xl font-bold tracking-tight">{data.name}</h2>
             <p className="text-gray-400 text-base leading-snug">
-                Details on how we handle user data and privacy,Details on how we handle user data and privacy
+              {data.description}
             </p>
         </div>
 

@@ -1,131 +1,173 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import {
-  Dialog,
-  DialogDescription,
-  DialogPanel,
-  DialogFooter,
-  DialogHeader,
-  DialogPopup,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
+    Dialog,
+    DialogDescription,
+    DialogPanel,
+    DialogFooter,
+    DialogHeader,
+    DialogPopup,
+    DialogTitle,
+    DialogTrigger,
+    DialogClose,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button";
 import {
-  Field,
-  FieldDescription,
-  FieldLabel,
+    Field,
+    FieldDescription,
+    FieldLabel,
+    FieldError
+
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input"
 import axios from 'axios';
 import { supabase } from '@/lib/supabase';
 import { Textarea } from "@/components/ui/textarea"
+import { CreateProject } from '@/lib/zod';
 
 
-export default function ProjectDialog (){
+export default function ProjectDialog() {
 
-const [info,SetInfo]=useState<{Name:string,URL:string,Branch:string,Description:string}>({
-    Name:"",
-    URL:"",
-    Branch:"main",
-    Description:""
-})
+    const [info, SetInfo] = useState<{ Name: string, URL: string, Branch: string, Description: string }>({
+        Name: "",
+        URL: "",
+        Branch: "main",
+        Description: ""
+    })
+    // for dialog
+    const [open, setOpen] = useState(false)
 
-   
-async function HandleProject(){
-    const {data:{user},error}=await supabase.auth.getUser()
-    if(error || !user){
-        console.error("user not found")
-        return
+    const [errors, setErrors] = useState<Record<string, string>>({})
+
+    async function HandleProject() {
+        const { data: { user }, error } = await supabase.auth.getUser()
+        if (error || !user) {
+            console.error("user not found")
+            return
+        }
+
+        const payload = {
+            Name: info.Name,
+            URL: info.URL, // Zod ينتظر Repo وليس URL
+            Branch: info.Branch,
+            Description: info.Description
+        };
+
+        const checkvalid = CreateProject.safeParse(payload)
+
+        if (!checkvalid.success) {
+            // تحويل مصفوفة أخطاء Zod إلى كائن سهل الاستخدام
+            const newErrors: Record<string, string> = {};
+
+            checkvalid.error.issues.forEach((issue) => {
+                // path[0] هو اسم الحقل (مثلاً "Name" أو "Repo")
+                const fieldName = issue.path[0] as string;
+                newErrors[fieldName] = issue.message;
+            });
+
+            setErrors(newErrors);
+            console.log("errors", newErrors)
+            return; // توقف هنا ولا تكمل الإرسال
+        }
+
+
+        const res = await axios.post(process.env.NEXT_PUBLIC_BACKEND + "/create-project", {
+            Name: info.Name,
+            URL: info.URL,
+            Branch: info.Branch,
+            UserID: user.id,
+            Description: info.Description
+        })
+
+        console.log("data is :", res.data)
+
+       SetInfo({ Name: "", URL: "", Branch: "main", Description: "" })
+            setErrors({})
+            setOpen(false)
+
+
+
+
     }
 
-    
-const res = await axios.post(process.env.NEXT_PUBLIC_BACKEND+"/create-project",{
-    Name:info.Name,
-    URL:info.URL,
-    Branch:info.Branch,
-    UserID:user.id,
-    Description:info.Description
-})
 
-console.log("data is :",res.data)
 
-SetInfo(prev=>({...prev,Name:"",URL:""}))
-  
+    return (
 
-  
-
-}
-
-  return (
-    
-         <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>
-              <Button>New project</Button>
+                <Button>New project</Button>
             </DialogTrigger>
 
             <DialogPopup>
-              <DialogHeader>
-                <DialogTitle>Dialog Title</DialogTitle>
-                <DialogDescription>Dialog Description</DialogDescription>
+                <DialogHeader>
+                    <DialogTitle>Dialog Title</DialogTitle>
+                    <DialogDescription>Dialog Description</DialogDescription>
 
 
-              </DialogHeader>
-              <DialogPanel>
+                </DialogHeader>
+                <DialogPanel>
 
-                <Field>
-                  <FieldLabel>Project Name</FieldLabel>
-                  <Input placeholder="Enter your name" type="text" onChange={((e)=>{
-                    SetInfo(prev=>({...prev,Name:e.target.value}))
-                  })} />
-                  <FieldDescription>Visible on your profile</FieldDescription>
-                </Field>
+                    <Field>
+                        <FieldLabel>Project Name</FieldLabel>
+                        <Input placeholder="Enter your name" type="text" onChange={((e) => {
+                            SetInfo(prev => ({ ...prev, Name: e.target.value }))
+                        })} />
 
-                 <Field className={"mt-4"}>
-                  <FieldLabel>Repositorie URL</FieldLabel>
-                  <Input placeholder="Enter Repositorie Link" type="text" onChange={((e)=>{
-                    SetInfo(prev=>({...prev,URL:e.target.value}))
-                  })}/>
-                  <FieldDescription>Write a project link on GitHub</FieldDescription>
-                </Field>
+                        {/* <FieldError>error</FieldError> */}
+                        {errors.Name ? <FieldError>{errors.Name}</FieldError> : <FieldDescription>Visible on your profile</FieldDescription>}
+                    </Field>
+
+                    <Field className={"mt-4"}>
+                        <FieldLabel>Repositorie URL</FieldLabel>
+                        <Input placeholder="Enter Repositorie Link" type="text" onChange={((e) => {
+                            SetInfo(prev => ({ ...prev, URL: e.target.value }))
+                        })} />
+
+                        {errors.URL ? <FieldError>{errors.URL}</FieldError> : <FieldDescription>Write a project link on GitHub</FieldDescription>}
+
+                    </Field>
 
 
 
 
-                 <Field className={"mt-4"}>
-                  <FieldLabel>Branch</FieldLabel>
-                  <Input placeholder="" type="text" value={info.Branch} onChange={((e)=>{
-                    SetInfo(prev=>({...prev,Branch:e.target.value}))
-                  })}/>
-                  <FieldDescription>Choose a branch</FieldDescription>
-                </Field>
+                    <Field className={"mt-4"}>
+                        <FieldLabel>Branch</FieldLabel>
+                        <Input placeholder="" type="text" value={info.Branch} onChange={((e) => {
+                            SetInfo(prev => ({ ...prev, Branch: e.target.value }))
+                        })} />
+                       
+                        {errors.Branch ? <FieldError>{errors.Branch}</FieldError> : <FieldDescription>Choose a branch</FieldDescription>}
+                    </Field>
 
-                <Field className={"mt-4"}>
-                    <FieldLabel>Description</FieldLabel>
-                    <Textarea onChange={((e)=>{
-                        SetInfo(prev=>({...prev,Description:e.target.value}))
-                    })}/>
-                </Field>
+                    <Field className={"mt-4"}>
+                        <FieldLabel>Description</FieldLabel>
+                        <Textarea maxLength={78} onChange={((e) => {
+                            SetInfo(prev => ({ ...prev, Description: e.target.value }))
 
-              </DialogPanel>
-              <DialogFooter>
-                <DialogClose className={"flex justify-between items-center w-full"}>
-                  <Button variant={"outline"} className="">Close</Button>
-                </DialogClose>
+                        })} />
+                     
+                        {errors.Description ?<FieldError>{errors.Branch}</FieldError> :   <FieldDescription>You can only write 76 characters.</FieldDescription>}
 
-                <DialogClose>
-                  <Button variant={"default"} className="" onClick={(()=>{
-                    console.log(info)
-HandleProject()
-                  })}>Create</Button>
-                </DialogClose>
-              </DialogFooter>
+                    </Field>
+
+                </DialogPanel>
+                <DialogFooter>
+                    <DialogClose className={"flex justify-between items-center w-full"}>
+                        <Button variant={"outline"} className="">Close</Button>
+                    </DialogClose>
+
+                  
+                      <Button variant={"default"} className="" onClick={(() => {
+                            console.log(info)
+                            HandleProject()
+                        })}>Create</Button>
+                </DialogFooter>
             </DialogPopup>
 
-          </Dialog>
-   
-  )
+        </Dialog>
+
+    )
 }
 
 

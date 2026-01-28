@@ -1,3 +1,4 @@
+import { Description } from "@radix-ui/react-dialog"
 import *  as z from "zod"
 
 export const SignupSchema=z.object({
@@ -22,3 +23,16 @@ export const LoginSchema =z.object({
 //verify email when the user forgot email
 export const verifyemail=z.email("Not a valid email")
 export const newPasswords =z.string().min(8,"The password must be more than 8 characters long.")
+
+export const CreateProject = z.object({
+  Name: z.string().min(1, "Project name required"),
+
+  URL:    z.url({ message: "Please enter a valid URL." }) 
+    .refine((val) => val.includes("github.com"), {
+      message: "The link must be from GitHub only."
+    }),
+
+  Branch: z.string().min(1, "The branch must be specified."),
+
+  Description: z.string().max(76, "The description is too long")
+});

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/frame"
 import { Button } from '@/components/ui/button'
 
-import { BookIcon, RouteIcon } from "lucide-react";
+import { BookIcon, RouteIcon ,Share,Pencil} from "lucide-react";
 
 import {
     Empty,
@@ -23,10 +23,12 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { supabase } from '@/lib/supabase';
 import ProjectDialog from '@/components/create-project';
+import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-const Content = () => {
+export default function  Content()  {
 
-    const [project, SetProject] = useState<boolean>(false)
+    const [project, SetProject] = useState<boolean>(true)
 
     useEffect(() => {
 
@@ -39,11 +41,11 @@ const Content = () => {
 
                 // if there is project show cards if not show empty
 
-                if (db.data.message === "Projects not found") {
-                    SetProject(false)
-                } else {
-                    SetProject(true)
-                }
+                // if (db.data.message === "Projects not found") {
+                //     SetProject(false)
+                // } else {
+                //     SetProject(true)
+                // }
 
 
 
@@ -58,21 +60,13 @@ const Content = () => {
     return (
         <div className='mt-5 space-y-5 p-4'>
 
-            <div className='flex space-x-7 h-screen'>
+            <div className='flex space-x-7 h-fit'>
                 {/** if there is project show this card */}
 
                 {project === true &&
+              <CardsGroups/>
+              
 
-                    <Frame className='w-[25%] bg-[#171719] p-1'>
-                        <FramePanel className='bg-[#101011] border-none h-full'>Analyzed</FramePanel>
-                        <FrameHeader>
-                            <FrameTitle>Repositories</FrameTitle>
-                            <FrameDescription>8
-                            </FrameDescription>
-                        </FrameHeader>
-
-                        <FrameFooter><Button>Upgrade</Button></FrameFooter>
-                    </Frame>
                 }
 
 
@@ -90,7 +84,7 @@ const Content = () => {
                             <EmptyDescription className='text-lg'>No projects were found.</EmptyDescription>
                         </EmptyHeader>
                         <EmptyContent>
-                           <ProjectDialog/>
+                            <ProjectDialog />
                         </EmptyContent>
                     </Empty>
 
@@ -110,4 +104,81 @@ const Content = () => {
     )
 }
 
-export default Content
+
+function CardsGroups(){
+    return(
+        <>
+   <div className='grid grid-cols-3 space-y-3 space-x-3 '>
+
+<Cards/>
+   </div>
+
+
+        </>
+    )
+}
+
+function Cards(){
+    return(
+<Frame className='w-[350px] bg-[#171719] border-none  overflow-hidden col-span-1 hover:cursor-pointer'>
+    <FramePanel className='bg-[#101011] flex flex-col space-y-6 border-none'>
+        
+        {/* الجزء العلوي: الأيقونة والأفاتار */}
+        <div className='flex justify-between items-start mb-0'>
+            
+            {/* حاوية الصورة: تحكم في الحجم من هنا دون التأثير على البقية */}
+            <div className='w-24 h-20 relative '> 
+                <Image 
+                    src="/file.png" 
+                    fill // يجعل الصورة تملأ الحاوية الخاصة بها فقط
+                    alt='file icon' 
+                    className='object-contain' // يحافظ على أبعاد الصورة دون تشويه
+                />
+            </div>
+
+            {/* الأفاتارز: ستبقى في مكانها في أقصى اليمين */}
+            <div className="flex -space-x-3 items-center">
+                <span className="text-sm text-gray-500 mr-1">350+</span>
+                <Avatar className="border-4 border-[#101011] w-10 h-10">
+                    <AvatarImage src="/avatars/01.png" />
+                    <AvatarFallback>JD</AvatarFallback>
+                </Avatar>
+                <Avatar className="border-4 border-[#101011] w-10 h-10">
+                    <AvatarImage src="/avatars/02.png" />
+                    <AvatarFallback>JD</AvatarFallback>
+                </Avatar>
+
+                 <Avatar className="border-4 border-[#101011] w-10 h-10">
+                    <AvatarImage src="/avatars/02.png" />
+                    <AvatarFallback>JD</AvatarFallback>
+                </Avatar>
+
+               
+            </div>
+        </div>
+
+        {/* النصوص: تأخذ المساحة المتبقية بسلاسة */}
+        <div className='space-y-2'>
+            <h2 className="text-white text-2xl font-bold tracking-tight">Privacy Policy</h2>
+            <p className="text-gray-400 text-base leading-snug">
+                Details on how we handle user data and privacy,Details on how we handle user data and privacy
+            </p>
+        </div>
+
+    </FramePanel>
+
+    {/* الأزرار في الأسفل كما في الصورة */}
+    <FrameFooter className='flex '>
+        <div className='flex  gap-4  justify-between w-full'>
+            <Button className='' variant={"default"}>
+                <Share size={20}/> Share
+            </Button>
+            <Button variant="ghost" className=''>
+                <Pencil size={20}/> Edit
+            </Button>
+        </div>
+    </FrameFooter>
+</Frame>
+    )
+}
+

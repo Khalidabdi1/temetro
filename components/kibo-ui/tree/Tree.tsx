@@ -143,6 +143,15 @@ export default function TreeExample() {
             <TreeLabel>README.md</TreeLabel>
           </TreeNodeTrigger>
         </TreeNode>
+
+          <TreeNode nodeId="khlalid.ts">
+          <TreeNodeTrigger>
+            <TreeExpander />
+            <TreeIcon icon={<FileJson className="h-4 w-4" />} />
+            <TreeLabel>khalid.json</TreeLabel>
+          </TreeNodeTrigger>
+        </TreeNode>
+        
       </TreeView>
     </TreeProvider>
   );

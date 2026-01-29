@@ -23,61 +23,11 @@ import {
 } from "@tabler/icons-react";
 import { useRef, useState } from "react";
 
-import {
-  IconAlertTriangle,
-  IconArrowUp,
-  IconCloud,
-  IconFileSpark,
-  IconGauge,
-  IconPhotoScan,
-} from "@tabler/icons-react";
 export default function Ai01() {
   const [message, setMessage] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-
-
-  const PROMPTS = [
-  {
-    icon: IconFileSpark,
-    text: "Explain the structure & tech stack",
-    prompt:
-      "Explain the project structure, main folders, and technologies used.",
-  },
-  {
-    icon: IconGauge,
-    text: "How does the core logic work?",
-    prompt:
-      "Explain the core logic and important parts of the code in simple terms.",
-  },
-  {
-    icon: IconAlertTriangle,
-    text: "What does this repository do?",
-    prompt:
-      "Explain what this repository does, its main goal, and who it is for."
-
-  }
-];
-
-
-const handlePromptClick = (prompt: string) => {
-  if (textareaRef.current) {
-    setMessage(prompt);
-    
-    textareaRef.current.focus();
-
-
-    setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.style.height = "auto";
-        textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-      }
-    }, 0);
-  }
-};
-
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,9 +62,9 @@ const handlePromptClick = (prompt: string) => {
 
   return (
     <div className="w-full">
-      <h1 className="mb-7 mx-auto max-w-2xl text-center text-2xl font-semibold leading-9 text-foreground px-1 text-pretty whitespace-pre-wrap">
-       Explore Any GitHub Repo
-      </h1>
+      {/* <h1 className="mb-7 mx-auto max-w-2xl text-center text-2xl font-semibold leading-9 text-foreground px-1 text-pretty whitespace-pre-wrap">
+        How can I help you today?
+      </h1> */}
 
       <form onSubmit={handleSubmit} className="group/composer w-full">
         <input
@@ -249,23 +199,6 @@ const handlePromptClick = (prompt: string) => {
           </div>
         </div>
       </form>
-
-      <div className="flex flex-wrap justify-center gap-2 mt-3">
-        {PROMPTS.map((button) => {
-          const IconComponent = button.icon;
-          return (
-            <Button
-              key={button.text}
-              variant="ghost"
-              className="group flex items-center gap-2 rounded-full border px-3 py-2 text-sm text-foreground transition-all duration-200 hover:bg-muted/30 h-auto bg-transparent dark:bg-muted"
-              onClick={() => handlePromptClick(button.prompt)}
-            >
-              <IconComponent className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-foreground" />
-              <span>{button.text}</span>
-            </Button>
-          );
-        })}
-      </div>
     </div>
   );
 }

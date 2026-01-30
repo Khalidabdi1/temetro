@@ -186,8 +186,8 @@ export function AppSidebar({ onFileSelect, ...props }: AppSidebarProps) {
 
 const router =useRouter()
   return (
-    <Sidebar {...props}>
-      <SidebarContent>
+    <Sidebar {...props} >
+      <SidebarContent className="no-scrollbar">
         <SidebarGroup>
           <SidebarGroupLabel>Changes</SidebarGroupLabel>
           <SidebarGroupContent>

@@ -125,7 +125,7 @@ try{
   }
 console.log("login successful ",data)
 console.log("valid data",result.data)
-router.push("/dashboard")
+router.replace("/dashboard/Home")
 
 setLoading(false)
 
@@ -149,7 +149,8 @@ await authClient.signIn.social({
 const {data, error}=await supabase.auth.signInWithOAuth({
   provider:"google",
   options:{
-    redirectTo:`${origin}/dashboard`
+    //dashboard/Home
+    redirectTo:`${origin}/dashboard/Home`
   }
   
 })

@@ -85,8 +85,16 @@ import { Textarea } from "@/components/ui/textarea"
 
 export const dynamic = "force-dynamic";
 
-
 export default function Page() {
+    return (
+        <React.Suspense fallback={<div className="flex h-screen w-screen items-center justify-center">Loading Application...</div>}>
+            <CodePageContent />
+        </React.Suspense>
+    )
+}
+
+
+export  function CodePageContent() {
     const [fileContent, setFileContent] = React.useState<string>("// Select a file to view the code")
     const [isLoading, setIsLoading] = React.useState(false)
     const searchParams = useSearchParams()

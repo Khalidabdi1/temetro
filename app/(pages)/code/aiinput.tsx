@@ -59,11 +59,7 @@ import {
     PopoverTitle,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import {
-    Tooltip,
-    TooltipPopup,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 
 export default function AiInput() {
     // for select

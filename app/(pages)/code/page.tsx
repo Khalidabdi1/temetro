@@ -12,6 +12,21 @@ import { ArrowUpIcon, PlusIcon, InfoIcon, Send, Circle, MessageCircle ,AudioLine
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Radio, RadioGroup } from "@/components/ui/radio-group";
+import { LiveWaveform } from "./sound";
+import Audio from "./audioPlayer";
+import { LiveVideoRecorder } from "./LiveVideoRecorder";
+import AiInput from "./aiinput";
+
+
+import {
+  AudioScrubber,
+  LiveMicrophoneWaveform,
+  MicrophoneWaveform,
+  RecordingWaveform,
+  ScrollingWaveform,
+  StaticWaveform,
+  Waveform,
+} from "@/components/ui/waveform"
 
 import {
     InputGroup,
@@ -154,7 +169,7 @@ export default function Page() {
 
                 </div>
 
-                <div className="col-span-1  w-full no-scrollbar p-3">
+                <div className="col-span-1  w-full flex no-scrollbar p-3">
                     <Cards />
                 </div>
 
@@ -166,11 +181,11 @@ export default function Page() {
 
 function Cards() {
     return (
-        <Card className="sticky top-1 h-170  m-0 p-2 space-x-0 gap-0">
-            <CardHeader className=" mb-0">
+        <Card className="sticky top-6 h-170  m-0 p-2 space-x-0 gap-0 w-full mt-4">
+            {/* <CardHeader className=" mb-0">
                 <CardTitle className="">Title</CardTitle>
                 <CardDescription className=" m-0">Description</CardDescription>
-            </CardHeader>
+            </CardHeader> */}
             <CardPanel className="h-full      p-0">
                 {/** if there is not comments show this  */}
                 <div className=" h-full w-full flex justify-center items-center flex-col">
@@ -193,93 +208,3 @@ function Cards() {
     )
 }
 
-function AiInput() {
-    // for select
-    const [recordingType, setRecordingType] = React.useState<string>("voice");
-
-    return (
-        <InputGroup className="flex flex-col m-0 p-1 w-full">
-            <h1>daw</h1>
-            <InputGroupInput id="email-1" placeholder="Add your comment..." type="email" className={"mt-0  "} />
-            <div className="flex justify-between  w-full p-1">
-                <div className="flex justify-center items-center">
-                    <Button variant={"destructive"} className="bg-red-600 border-none rounded-full">
-                        {recordingType==="voice" && <AudioLines/>}
-                        {recordingType==="video clip" && <CircleDot className="size-4" />}
-                        
-                        
-                    </Button>
-
-                    <Popover>
-                        <PopoverTrigger><ArrowUpIcon className="size-5" /></PopoverTrigger>
-                        <PopoverPopup className={"mb-5"}>
-                            <PopoverTitle>Select mode</PopoverTitle>
-                            <PopoverDescription className={"mb-3"}>Choose what you want to send</PopoverDescription>
-
-                            <Selects  value={recordingType} onValueChange={setRecordingType}/>
-
-                            <PopoverClose className={"mt-3 w-full"}>
-                                <Button className="w-full">Close</Button>
-                            </PopoverClose>
-                        </PopoverPopup>
-                    </Popover>
-
-                </div>
-
-
-                <div>
-                    <Button className="rounded-full"><Send /></Button>
-
-                </div>
-            </div>
-        </InputGroup>
-    )
-}
-
-interface SelectsProps {
-    value: string;
-    onValueChange: (val: string) => void;
-}
-
-function Selects({ value, onValueChange }: SelectsProps) {
-
-    
-    return (
-      <RadioGroup 
-            value={value} 
-            onValueChange={onValueChange}
-            className="grid gap-2"
-        >
-            <Label className="flex items-start gap-2 rounded-lg border p-3 hover:bg-accent/50 has-data-checked:border-primary/48 has-data-checked:bg-accent/50">
-                <Radio value="voice" />
-                <div className="flex flex-col gap-1">
-                    <p>voice</p>
-                    <p className="text-muted-foreground text-xs">
-                       Send a voice message with your feedback
-                    </p>
-                </div>
-            </Label>
-            <Label className="flex items-start gap-2 rounded-lg border p-3 hover:bg-accent/50 has-data-checked:border-primary/48 has-data-checked:bg-accent/50">
-                <Radio value="video clip" />
-                <div className="flex flex-col gap-1">
-                    <p>video clip</p>
-                    <p className="text-muted-foreground text-xs">
-                        You can send a video with a note
-                    </p>
-                </div>
-            </Label>
-
-            {/* <Label className="flex items-start gap-2 rounded-lg border p-3 hover:bg-accent/50 has-data-checked:border-primary/48 has-data-checked:bg-accent/50">
-                <Radio value="text" />
-                <div className="flex flex-col gap-1">
-                    <p>text</p>
-                    <p className="text-muted-foreground text-xs">
-                        Receive notifications via text message.
-                    </p>
-                </div>
-            </Label> */}
-        </RadioGroup>
-
-    )
-
-}

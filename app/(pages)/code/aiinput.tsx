@@ -244,7 +244,7 @@ export default function AiInput() {
 
 
                 <div>
-                    <Button className="rounded-full" onClick={handleSend} disabled={!audioFile && !isRecording}><Send /></Button>
+                    <Button className="rounded-full" onClick={handleSend} disabled={!fileBlob || isRecording}><Send /></Button>
 
                 </div>
             </div>

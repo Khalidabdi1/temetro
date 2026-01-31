@@ -15,7 +15,13 @@ import { Radio, RadioGroup } from "@/components/ui/radio-group";
 import { LiveWaveform } from "./sound";
 import Audio from "./audioPlayer";
 import { LiveVideoRecorder } from "./LiveVideoRecorder";
-import AiInput from "./aiinput";
+// import AiInput from "./aiinput";
+import dynamicImport from 'next/dynamic'
+
+const AiInput = dynamicImport(() => import("./aiinput"), { 
+    ssr: false,
+    loading: () => <div className="h-20 w-full animate-pulse bg-muted rounded-xl" />
+});
 
 
 import {
@@ -77,6 +83,8 @@ import {
 } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 
+export const dynamic = "force-dynamic";
+
 
 export default function Page() {
     const [fileContent, setFileContent] = React.useState<string>("// Select a file to view the code")
@@ -100,8 +108,16 @@ export default function Page() {
 
             if (data.content) {
                 // GitHub يعيد المحتوى مشفراً بـ Base64، نحتاج لفك التشفير
-                const decodedCode = atob(data.content.replace(/\n/g, ''))
-                setFileContent(decodedCode)
+                // const decodedCode = atob(data.content.replace(/\n/g, ''))
+                // setFileContent(decodedCode)
+
+                const decodedCode = decodeURIComponent(
+        atob(data.content.replace(/\n/g, ''))
+            .split('')
+            .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+    );
+    setFileContent(decodedCode);
             }
         } catch (err) {
             setFileContent("// خطأ في جلب محتوى الملف")
